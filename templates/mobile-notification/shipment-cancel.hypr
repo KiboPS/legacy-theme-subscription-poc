@@ -1,0 +1,6 @@
+{% if model.isShopperCanceled == true %}
+{{labels.mobileCurbsideCanceledByShopper}}
+{% endif %}
+{% if model.isShopperCanceled == false %} 
+{{labels.mobileCurbsideCanceledByFulfiller}}
+{% endif %}

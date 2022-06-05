@@ -65,7 +65,7 @@ define([
 
 
 var CheckoutOrder = OrderModels.Order.extend({
-    helpers : ['selectableDestinations', 'isOriginalCartItem'],
+    helpers : ['selectableDestinations', 'isOriginalCartItem', 'getDeliverableItems'],
     validation : {
         destinationId : {
             required: true,
@@ -152,6 +152,35 @@ var CheckoutOrder = OrderModels.Order.extend({
         var self = this;
         var me = this;
         this.getCheckout().get('shippingStep').splitCheckoutItem(self.get('id'), 1);
+    },
+    getDeliverableItems: function() {
+        return this.getCheckout().apiModel.data.items.filter(function(item) {
+            return item.fulfillmentMethod == "Delivery";
+        });
+    },
+    updateSingleCheckoutDestination: function(destinationId, customerContactId, isFulfillmentMethodDelivery){
+        var self = this;
+        self.isLoading(true);
+        if(destinationId){
+            return self.getCheckout().apiSetAllShippingDestinations({
+                destinationId: destinationId,
+                isFulfillmentMethodDelivery: isFulfillmentMethodDelivery
+            }).ensure(function(){
+                 self.isLoading(false);
+            });
+        }
+
+        var destination = self.getCheckout().get('destinations').findWhere({customerContactId: customerContactId});
+        if(destination){
+            return destination.saveDestinationAsync().then(function(data){
+                return self.getCheckout().apiSetAllShippingDestinations({
+                    destinationId: data.data.id,
+                    isFulfillmentMethodDelivery: isFulfillmentMethodDelivery
+                }).ensure(function(){
+                    self.isLoading(false);
+                });
+            });
+        }
     }
 });
 
@@ -333,11 +362,19 @@ var CheckoutPage = Backbone.MozuModel.extend({
                         });
                     });
 
-                    if (!self.get('requiresFulfillmentInfo')) {
+                    // If both fulfillmentInfo and shippingMethod are not required,
+                    // E.g. When only Pickup Items are present in cart, 
+                    // then remove all validations related to fulfillmentInfo. This will also remove shippingMethodCode validation.
+                    if (!self.get('requiresFulfillmentInfo') && !self.get('requiresShippingMethod')) {
                         self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('fulfillment') === -1; }));
                     }
 
-
+                    // If fulfillmentInfo is required and shippingMethod is not required,
+                    // E.g. When only Delivery Items or Delivery and Pickup Items are present in cart,
+                    // then remove only shippingMethodCode validation as fulfillmentInfo will be required for Delivery Items.
+                    if (self.get('requiresFulfillmentInfo') && !self.get('requiresShippingMethod')) {
+                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('shippingMethodCode') === -1; }));    
+                    }
 
                     var billingEmail = billingInfo.get('billingContact.email');
                     if (!billingEmail && user.email) billingInfo.set('billingContact.email', user.email);
@@ -854,11 +891,12 @@ var CheckoutPage = Backbone.MozuModel.extend({
                         if(attrVal) {
                             updateAttrs.push({
                                 'fullyQualifiedName': attr.attributeFQN,
-                                'values': [ attrVal ]
+                                'values': [attrVal],
+                                'attributeDefinitionId': attr.id
                             });
                         }
                     });
-
+                    
                     if(updateAttrs.length > 0){
                         process.push(function(){
                             return checkout.apiUpdateAttributes(updateAttrs);

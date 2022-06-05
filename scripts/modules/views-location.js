@@ -51,7 +51,8 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mod
                     var self = this;
                     this.model.apiGetForProduct({
                         productCode: this.product.get('variationProductCode') || this.product.get('productCode'),
-                        location: location
+                        location: location,
+                        manageStock: this.product.attributes.inventoryInfo.manageStock
                     }).then(function () {
                         self.render();
                         $('.mz-locationsearch-pleasewait').fadeOut();
@@ -82,6 +83,7 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mod
                 getRenderContext: function () {
                     var c = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
                     c.model.messages = (this.product.messages) ? this.product.messages.toJSON() : [];
+                    c.model.product = (this.product) ? this.product.toJSON() : [];
                     return c;
                 }
             });

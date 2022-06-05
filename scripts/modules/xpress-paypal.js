@@ -17,13 +17,13 @@ function($, Api, CartModels, hyprlivecontext, _) {
        var merchantAccountId = _.findWhere(externalPayment.credentials, {"apiName" : "merchantAccountId"}),
           environment = _.findWhere(externalPayment.credentials, {"apiName" : "environment"}),
           id = CartModels.Cart.fromCurrent().id || window.order.id,
-          isCart = window.location.href.indexOf("cart") > 0;
+          isCart = window.location.href.indexOf("cart") > 0 || window.location.href.indexOf("myaccount") > 0;
       if(externalPayment.isEnabled) {
         window.paypal.checkout.setup(merchantAccountId.value, {
             environment: environment.value,
             click: function(event) {
                 event.preventDefault();
-                var url = "../paypal/token?id=" + id + (!document.URL.split('?')[1] ? "": "&" + document.URL.split('?')[1].replace("id="+id,"").replace("&&", "&"));
+                var url = window.location.protocol + "//" + window.location.host + "/paypal/token?id=" + id + (!document.URL.split('?')[1] ? "": "&" + document.URL.split('?')[1].replace("id="+id,"").replace("&&", "&"));
                 if (isCart)
                   url += "&isCart="+ isCart;
                 window.paypal.checkout.initXO();

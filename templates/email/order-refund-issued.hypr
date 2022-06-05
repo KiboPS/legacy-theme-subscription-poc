@@ -1,11 +1,12 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
-
+    <div class="mz-productdetails">
 	<dl class="mz-orderheader">
 		<dt>{{ labels.orderNo }}</dt>
 		<dd>{{ model.orderNumber }}</dd>
-
+		<dt>{{ labels.externalOrderId }}</dt>
+		<dd>{{ model.externalId }}</dd>
 		<dt>{{ labels.orderDate }}:</dt>
 		<dd>{{ model.submittedDate }}</dd>
 	</dl>
@@ -20,7 +21,7 @@
 	</p>
 
 	{{ labels.orderRefundBlob|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
-
+	</div>
 	<table class="mz-ordersummary">
         <thead>
             <tr>
@@ -34,7 +35,12 @@
 		<tr class="mz-ordersummary-line">
 			<td class="mz-ordersummary-item-product">
 				{% if refund.payment.paymentType == "CreditCard" %}
-					{{ refund.payment.billingInfo.card.paymentOrCardType }} {{ refund.payment.billingInfo.card.cardNumberPartOrMask }}
+					{{ refund.payment.billingInfo.card.paymentOrCardType }}
+					{% if refund.payment.billingInfo.card.cCLastFour != null %} 
+							************{{ refund.payment.billingInfo.card.cCLastFour }}
+						{% else %}
+							{{ refund.payment.billingInfo.card.cardNumberPartOrMask }}
+						{% endif %}
 				{% else %}
 					{% if refund.payment.paymentType == "PurchaseOrder" %}
 						{{ labels.purchaseOrder }}
@@ -59,9 +65,12 @@
 					{%if refund.payment.billingInfo.token.type|lower == "paywithamazon" %}
 						{{labels.payWithAmazon}}
 					{% endif %}
-          {%if refund.payment.billingInfo.token.type|lower == "applepay" %}
-            {{labels.applePay}}
-          {% endif %}
+					{%if refund.payment.billingInfo.token.type|lower == "applepay" %}
+						{{labels.applePay}}
+					{% endif %}
+				{% endif %}
+				{% if refund.payment.paymentType == "Check" %}
+				{{labels.check}}
 				{% endif %}
 			</td>
 			<td>{{ refund.amount|currency }}</td>

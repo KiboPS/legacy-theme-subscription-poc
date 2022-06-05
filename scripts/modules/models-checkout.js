@@ -12,7 +12,7 @@
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
-            helpers: ['stepStatus', 'requiresFulfillmentInfo','isAwsCheckout','isNonMozuCheckout', 'requiresDigitalFulfillmentContact','isShippingEditHidden'],  //
+            helpers: ['stepStatus', 'requiresFulfillmentInfo','isAwsCheckout','isNonMozuCheckout', 'requiresDigitalFulfillmentContact','isShippingEditHidden', 'requiresShippingMethod'],  //
             // instead of overriding constructor, we are creating
             // a method that only the CheckoutStepView knows to
             // run, so it can run late enough for the parent
@@ -57,6 +57,9 @@
             },
             requiresFulfillmentInfo: function () {
                 return this.getOrder().get('requiresFulfillmentInfo');
+            },
+            requiresShippingMethod: function () {
+                return this.getOrder().get('requiresShippingMethod');
             },
             isAwsCheckout: function() {
                 var activePayments = this.getOrder().apiModel.getActivePayments();
@@ -222,14 +225,27 @@
                                     me.isLoading(false);
                                     parent.isLoading(false);
                                     me.calculateStepStatus();
-                                    parent.calculateStepStatus();
+                                    // if shippingMethod is not required, then set FulfillmentInfo(shipping method) step to complete.
+                                    // e.g. If all items are Delivery items or Delivery and Pickup
+                                    // then FulfillmentContact step is required but FulfillmentInfo(shipping method) step is not required
+                                    if (!me.requiresShippingMethod()) {
+                                        parent.stepStatus("complete");
+                                        parent.parent.get('billingInfo').calculateStepStatus();
+                                    } else {
+                                        parent.calculateStepStatus();
+                                    }
                                 });
                             });
                         } else {
                             me.isLoading(false);
                             parent.isLoading(false);
                             me.calculateStepStatus();
-                            parent.calculateStepStatus();
+                            if (!me.requiresShippingMethod()) {
+                                parent.stepStatus("complete");
+                                parent.parent.get('billingInfo').calculateStepStatus();
+                            } else {
+                                parent.calculateStepStatus();
+                            }
                         }
                     });
                 };
@@ -345,6 +361,9 @@
                 this.isLoading(true);
                 var order = this.getOrder();
                 if (order) {
+                    // Don't update fulfillment info if order is created from a quote.
+                    if (order.get('originalQuoteId')) return false;
+
                     order.apiModel.update({ fulfillmentInfo: me.toJSON() })
                         .then(function (o) {
                             var billingInfo = me.parent.get('billingInfo');
@@ -1280,6 +1299,13 @@
                     me.setPurchaseOrderInfo();
                     me.getPaymentTypeFromCurrentPayment();
 
+                    //Enable purchase order as payment method for orders like pickup and digital
+                    if (me.isPurchaseOrderEnabled()) {
+                        me.setDefaultPaymentType(me);
+                        me.updatePurchaseOrderAmount();
+                        me.calculateStepStatus();
+                    }
+
                     var savedCardId = me.get('card.paymentServiceCardId');
                     me.set('savedPaymentMethodId', savedCardId, { silent: true });
                     me.setSavedPaymentMethod(savedCardId);
@@ -1628,8 +1654,18 @@
                         });
                     });
 
-                    if (!self.get('requiresFulfillmentInfo')) {
+                    // If both fulfillmentInfo and shippingMethod are not required,
+                    // E.g. When only Pickup Items are present in cart, 
+                    // then remove all validations related to fulfillmentInfo. This will also remove shippingMethodCode validation.
+                    if (!self.get('requiresFulfillmentInfo') && !self.get('requiresShippingMethod')) {
                         self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('fulfillment') === -1; }));
+                    }
+
+                    // If fulfillmentInfo is required and shippingMethod is not required,
+                    // E.g. When only Delivery Items or Delivery and Pickup Items are present in cart,
+                    // then remove only shippingMethodCode validation as fulfillmentInfo will be required for Delivery Items.
+                    if (self.get('requiresFulfillmentInfo') && !self.get('requiresShippingMethod')) {
+                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('shippingMethodCode') === -1; }));    
                     }
 
                     var billingEmail = billingInfo.get('billingContact.email');
@@ -2131,7 +2167,7 @@
                 }
 
                 //save contacts
-                if (!this.isNonMozuCheckout() && isAuthenticated || isSavingNewCustomer && this.hasRequiredBehavior(1014)) {
+                if (!this.isNonMozuCheckout() && (isAuthenticated || isSavingNewCustomer) && this.hasRequiredBehavior(1014)) {
                     if (!isSameBillingShippingAddress && !isSavingCreditCard) {
                         if (requiresFulfillmentInfo) process.push(this.addShippingContact);
                         if (requiresBillingInfo) process.push(this.addBillingContact);

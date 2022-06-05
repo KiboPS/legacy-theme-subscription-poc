@@ -17,14 +17,41 @@
       <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
         <td class="mz-ordersummary-item-product">
           {{ item.product.name }}
-          {% if item.product.bundledProducts.length %}
+          {% if item.product.productUsage == 'Bundle' %}
           <dl class="mz-propertylist">
             {% for bundledProduct in item.product.bundledProducts %}
             <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
             <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+            {% if bundledProduct.stock and bundledProduct.stock.isOnBackOrder and bundledProduct.stock.manageStock and bundledProduct.stock.stockAvailable < item.quantity|multiply(bundledProduct.quantity) %}
+                        <br/> <dd>
+              <div class="mz-product-backorder">
+                <div style="color: #444; padding: 2px 5px; background-color: #ffefcf; border: 1px solid #ffdfc0;font-weight: bold;">
+                  {{ labels.qty }} {{ bundledProduct.stock.stockAvailable }} {{ labels.productBackorderAvailable }}
+                  {% if bundledProduct.stock.availableDate  %}. {% else %}, {% endif %}
+                  <br />{{ labels.qty }} {{ item.quantity|multiply(bundledProduct.quantity)|subtract(bundledProduct.stock.stockAvailable) }} {{ labels.itemOnBackorder }}
+
+                  {% if bundledProduct.stock.availableDate  %}
+                  ,<br /> {{ labels.productBackorderAvailableDate }} {{bundledProduct.stock.availableDate | date("m/d/Y")}}
+                  {% endif %}
+                </div>
+              </div>
+            </dd>
+            {% endif %}
             {% endfor %}
           </dl>
+          {% else %}
+          {% if item.product.stock and item.product.stock.isOnBackOrder and item.product.stock.manageStock %}
+          <div class="mz-product-backorder">
+            <div style="color: #444; padding: 2px 5px; background-color: #ffefcf; border: 1px solid #ffdfc0;font-weight: bold;">
+              {{ labels.qty }} {{ item.quantity|subtract(item.product.stock.stockAvailable) }} {{ labels.itemOnBackorder }}
+              {% if item.product.stock.availableDate  %}
+              .<br /> {{ labels.productBackorderAvailableDate }} {{item.product.stock.availableDate | date("m/d/Y")}}
+              {% endif %}
+            </div>
+          </div>
           {% endif %}
+          {% endif %}
+
         </td>
         <td>{{ item.quantity }}</td>
         <td>
@@ -76,7 +103,7 @@
 
         {% if pickupItems and items|collection_filter(q) %}
         <tr class="mz-email-fulfillment-info">
-          <td class="mz-addresssummary" colspan="4">
+          <td class="mz-addresssummary">
             <b>{{ labels.pickupAt }}</b>
             <div>
               <div>{{ location.name }}</div>
@@ -86,6 +113,9 @@
               {% if location.address.address4 %}<div>{{ location.address.address4 }}</div>{% endif %}
               <div>{{location.address.cityOrTown}}, {{location.address.stateOrProvince}} {{location.address.postalOrZipCode}}</div>
             </div>
+          </td>
+          <td colspan="3">
+            {% include "modules/common/pickup-contacts" with model=order %}
           </td>
         </tr>
         {% endif %}

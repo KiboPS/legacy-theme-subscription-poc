@@ -75,9 +75,7 @@
     {
       "id": "categoryContent@mozu",
       "path": "categoryContent.js",
-      "documentTypes": [
-        "categoryContent@mozu"
-      ],
+      "documentTypes": [ "categoryContent@mozu" ],
       "priority": 0.2
     },
     {
@@ -99,6 +97,24 @@
       "title": "Your Order Has Shipped"
     },
     {
+      "id": "order.cancelled",
+      "properties": {},
+      "template": "email/order-cancel",
+      "title": "Order Canceled"
+    },
+    {
+      "id": "order.cancelled.POSE",
+      "properties": {},
+      "template": "email/order-cancel",
+      "title": "Order Canceled POSE"
+    },
+    {
+      "id": "shipment.itemscanceled",
+      "properties": {},
+      "template": "email/item-cancel",
+      "title": "Item Canceled"
+    },
+    {
       "id": "checkout.changed",
       "customEditor": "email-orderconfirmation-v2",
       "properties": {},
@@ -111,6 +127,30 @@
       "properties": {},
       "template": "email/order-confirmation",
       "title": "Order Confirmation"
+    },
+    {
+      "id": "shipment.pickupready",
+      "properties": {},
+      "template": "email/order-pickup-ready",
+      "title": "Order Pickup Ready"
+    },
+    {
+      "id": "shipment.pickupreminder",
+      "properties": {},
+      "template": "email/order-pickup-reminder",
+      "title": "Order Pickup Reminder"
+    },
+    {
+      "id": "shipment.partialpickupready",
+      "properties": {},
+      "template": "email/partial-pickup-ready",
+      "title": "Partial Pickup Ready"
+    },
+    {
+      "id": "shipment.transfercreatedbyfulfiller",
+      "properties": {},
+      "template": "email/transfer-shipment-created-fulfiller",
+      "title": "Transfer Created By Fulfiller"
     },
     {
       "id": "refund.created",
@@ -149,6 +189,24 @@
       "title": "Return Has Been Updated"
     },
     {
+      "id": "shipment.transfercreated",
+      "properties": {},
+      "template": "email/transfer-shipment-created",
+      "title": "Transfer Shipment Created"
+    },
+    {
+      "id": "shipment.transfershipped",
+      "properties": {},
+      "template": "email/transfer-shipment-shipped",
+      "title": "Transfer Shipment Shipped"
+    },
+    {
+      "id": "shipment.fulfilled",
+      "properties": {},
+      "template": "email/shipment-confirmation",
+      "title": "Your Shipment Has Shipped"
+    },
+    {
       "id": "user.created",
       "properties": {},
       "template": "email/new-user",
@@ -161,6 +219,36 @@
       "title": "Password Reset"
     },
     {
+      "id": "b2baccount.created",
+      "properties": {},
+      "template": "email/b2b-account-created",
+      "title": "B2B Account Created"
+    },
+    {
+      "id": "b2baccount.accountinactive",
+      "properties": {},
+      "template": "email/b2b-account-inactive",
+      "title": "B2B Account Inactive"
+    },
+    {
+      "id": "b2baccount.accountdenied",
+      "properties": {},
+      "template": "email/b2b-account-denied",
+      "title": "B2B Account Denied"
+    },
+    {
+      "id": "shipment.backordered",
+      "properties": {},
+      "template": "email/backorder",
+      "title": "Backorder"
+    },
+    {
+      "id": "shipment.backorderdatechanged",
+      "properties": {},
+      "template": "email/backorder-update",
+      "title": "Backorder Update"
+    },
+    {
       "id": "product.instock",
       "properties": {},
       "template": "email/product-instock",
@@ -171,6 +259,150 @@
       "properties": {},
       "template": "email/giftcard-created",
       "title": "Gift Card Created"
+    },
+    {
+      "id": "gatewaygiftcard.created",
+      "properties": {},
+      "template": "email/gateway-giftcard-created",
+      "title": "Gateway Gift Card Created"
+    },
+    {
+      "id": "shipment.assigned",
+      "properties": {},
+      "template": "email/shipment-assignment",
+      "title": "Shipment Assignment"
+    },
+    {
+      "id": "shipment.intransitconfirmation",
+      "properties": {},
+      "template": "email/curbside-confirmation",
+      "title": "Customer In Transit Confirmation"
+    },
+    {
+      "id": "shipment.curbsideready",
+      "properties": {},
+      "template": "email/curbside-pickup-ready",
+      "title": "Curbside Order Pickup Ready"
+    },
+    {
+      "id": "shipment.partialcurbsideready",
+      "properties": {},
+      "template": "email/curbside-partial-pickup-ready",
+      "title": "Curbside Partial Pickup Ready"
+    },
+    {
+      "id": "shipment.customeratcurbside",
+      "properties": {},
+      "template": "email/curbside-customer",
+      "title": "Customer At Curbside"
+    },
+    {
+      "id": "shipment.customerintransit",
+      "properties": {},
+      "template": "email/curbside-intransit",
+      "title": "Customer In Transit"
+    },
+    {
+      "id": "quote.summary",
+      "properties": {},
+      "template": "email/quote-summary",
+      "title": "Quote Summary"
+    },
+    {
+      "id": "quote.inreview",
+      "properties": {},
+      "template": "email/quote-in-review",
+      "title": "Quote In Review"
+    },
+    {
+      "id": "quote.readyforcheckout",
+      "properties": {},
+      "template": "email/quote-ready-for-checkout",
+      "title": "Quote Ready for Checkout"
+    },
+    {
+      "id": "quote.expired",
+      "properties": {},
+      "template": "email/quote-expired",
+      "title": "Quote Expired"
+    },
+    {
+      "id": "order.cancelfailed",
+      "properties": {},
+      "template": "email/order-cancel-failed",
+      "title": "Order Cancel Failed"
+    },
+    {
+      "id": "subscription.skipped",
+      "properties": {},
+      "template": "email/subscription-skipped",
+      "title": "Subscription Skipped"
+    },
+    {
+      "id": "subscription.paused",
+      "properties": {},
+      "template": "email/subscription-paused",
+      "title": "Subscription Paused"
+    },
+    {
+      "id": "subscription.cancelled",
+      "properties": {},
+      "template": "email/subscription-cancelled",
+      "title": "Subscription Cancelled"
+    },
+    {
+      "id": "subscription.activated",
+      "properties": {},
+      "template": "email/subscription-activated",
+      "title": "Subscription Activated"
+    },
+    {
+      "id": "subscription.errored",
+      "properties": {},
+      "template": "email/subscription-errored",
+      "title": "Subscription Errored"
+    },
+    {
+      "id": "subscription.paymentupdated",
+      "properties": {},
+      "template": "email/subscription-payment-updated",
+      "title": "Subscription Payment Updated"
+    },
+    {
+      "id": "subscription.itemadded",
+      "properties": {},
+      "template": "email/subscription-item-added",
+      "title": "Item added to Subscription"
+    },
+    {
+      "id": "subscription.fulfillmentinfoupdated",
+      "properties": {},
+      "template": "email/subscription-fulfillment-info-updated",
+      "title": "Subscription Shipping Info Updated"
+    },
+    {
+      "id": "subscription.itemremoved",
+      "properties": {},
+      "template": "email/subscription-item-removed",
+      "title": "Item Removed from subscription"
+    },
+    {
+      "id": "subscription.itemquantityupdated",
+      "properties": {},
+      "template": "email/subscription-item-quantity-updated",
+      "title": "Item quantity updated on subscription"
+    },
+    {
+      "id": "subscription.frequencychanged",
+      "properties": {},
+      "template": "email/subscription-frequency-changed",
+      "title": "Subscription Frequency Updated"
+    },
+    {
+      "id": "subscription.nextorderdatechanged",
+      "properties": {},
+      "template": "email/subscription-next-order-date-updated",
+      "title": "Subscription Next Order Date Updated"
     }
   ],
   "backOfficeTemplates": [
@@ -185,6 +417,221 @@
       "title": "Packing Slip",
       "template": "back-office/packing-slip",
       "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "transfer-packing-slip",
+      "title": "Transfer Packing Slip",
+      "template": "back-office/transfer-packing-slip",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "pick-list",
+      "title": "Pick List",
+      "template": "back-office/pick-list",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "order-pick-sheet",
+      "title": "Order Pick Sheet",
+      "template": "back-office/order-pick-sheet",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "pick-wave-print",
+      "title": "Pick Wave Print",
+      "template": "back-office/pick-wave-print",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "mobile-notification",
+      "title": "Mobile Notification",
+      "template": "back-office/mobile-notification",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "return-receipt",
+      "title": "Return Receipt",
+      "template": "back-office/return-receipt",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "curbside-arrive",
+      "title": "Curbside Arrive",
+      "template": "back-office/curbside-arrive",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "curbside-seeyousoon",
+      "title": "Curbside SeeYouSoon",
+      "template": "back-office/curbside-see-you-soon",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "entityType": "customer-at-curbside",
+      "id": "customer-at-curbside",
+      "template": "back-office/customer-at-curbside",
+      "title": "Customer At Curbside",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer-at-curbside",
+      "id": "customer-at-curbside-qrcode",
+      "template": "back-office/customer-at-curbside",
+      "title": "Customer At Curbside QRCode",
+      "userCreatable": false
+    },
+    {
+      "entityType": "curbsideShipmentReady",
+      "id": "curbside-shipment-ready",
+      "template": "back-office/curbside-shipment-ready",
+      "title": "Curbside Shipment Ready",
+      "userCreatable": false
+    },
+    {
+      "entityType": "curbside-customer-survey",
+      "id": "curbside-customer-survey",
+      "template": "back-office/curbside-customer-survey",
+      "title": "Curbside Customer Survey",
+      "userCreatable": false
+    },
+    {
+      "entityType": "shipmentPickupReady",
+      "id": "shipment-pickup-ready",
+      "template": "back-office/shipment-pickup-ready",
+      "title": "Shipment Pickup Ready",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customerOnWayconfirmationn",
+      "id": "customer-on-way-confirmation",
+      "template": "back-office/customer-on-way-confirmation",
+      "title": "Customer On Way Confirmation",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customerAtStoreConfirmation",
+      "id": "customer-at-store-confirmation",
+      "template": "back-office/customer-at-store-confirmation",
+      "title": "Customer At Store Confirmation",
+      "userCreatable": false
+    },
+    {
+      "entityType": "curbside-partial-pickup-ready",
+      "id": "curbside-partial-pickup-ready",
+      "template": "back-office/curbside-partial-pickup-ready",
+      "title": "Curbside Partial Pickup Ready",
+      "userCreatable": false
+    },
+    {
+      "entityType": "quote.summary",
+      "id": "quote.summary",
+      "template": "back-office/quote-summary",
+      "title": "Quote Summary",
+      "userCreatable": false
+    },
+    {
+      "id": "shipment.deliverydateupdated",
+      "properties": {},
+      "template": "email/expected-delivery-date-update.hypr",
+      "title": "Expected Delivery Date Updated"
+    },
+    {
+      "id": "shipment.readyfordelivery",
+      "properties": {},
+      "template": "email/items-ready-for-delivery.hypr",
+      "title": "Items Ready For Delivery"
+    }
+  ],
+  "mobileNotificationTemplates": [
+    {
+      "id": "shipment.itemscanceled",
+      "properties": {},
+      "template": "mobile-notification/shipment-cancel",
+      "title": "Item Canceled"
+    },
+    {
+      "id": "shipment.assigned",
+      "properties": {},
+      "template": "mobile-notification/shipment-assignment",
+      "title": "Shipment Assignment"
+    },
+    {
+      "id": "shipment.fulfilled",
+      "properties": {},
+      "template": "mobile-notification/shipment-fulfilled",
+      "title": "Your Order Has Shipped"
+    },
+    {
+      "id": "shipment.intransitconfirmation",
+      "properties": {},
+      "template": "mobile-notification/curbside-confirmation",
+      "title": "Customer In Transit Confirmation"
+    },
+    {
+      "id": "shipment.customeratcurbside",
+      "properties": {},
+      "template": "mobile-notification/curbside-customer",
+      "title": "Customer At Curbside"
+    },
+    {
+      "id": "shipment.customerintransit",
+      "properties": {},
+      "template": "mobile-notification/curbside-intransit",
+      "title": "Customer In Transit"
+    },
+    {
+      "id": "order.changed",
+      "properties": {},
+      "template": "mobile-notification/order-confirmation",
+      "title": "Order Confirmation"
+    },
+    {
+      "id": "shipment.itemscanceled.store",
+      "properties": {},
+      "template": "mobile-notification/shipment-cancel-store",
+      "title": "Item Canceled By Fulfiller"
+    },
+    {
+      "id": "shipment.partialcurbsideready",
+      "properties": {},
+      "template": "mobile-notification/partial-curbside-ready",
+      "title": "Partial Curbside Ready"
+    },
+    {
+      "id": "shipment.curbsideready",
+      "properties": {},
+      "template": "mobile-notification/order-curbside-ready",
+      "title": "Curbside Ready"
+    },
+    {
+      "id": "order.optoutack",
+      "properties": {},
+      "template": "mobile-notification/opt-out-acknowledgement",
+      "title": "Opt Out Acknowledgement"
+    },
+    {
+      "id": "shipment.pickupreminder",
+      "properties": {},
+      "template": "mobile-notification/pickup-reminder",
+      "title": "Pickup Reminder"
+    },
+    {
+      "id": "shipment.pickupready",
+      "properties": {},
+      "template": "mobile-notification/ready-for-pickup",
+      "title": "Pickup Ready"
+    },
+    {
+      "id": "shipment.partialpickupready",
+      "properties": {},
+      "template": "mobile-notification/partial-ready-for-pickup",
+      "title": "Partial Pickup Ready"
+    },
+    {
+      "id": "shipment.customeratstore",
+      "properties": {},
+      "template": "mobile-notification/curbside-customer-at-store",
+      "title": "Customer At Store"
     }
   ],
   "pageTypes": [
@@ -292,6 +739,14 @@
       "customEditor": "productContent@mozu"
     },
     {
+      "entityType": "product-collection",
+      "id": "product-collection",
+      "template": "product-collection",
+      "title": "Product Collection",
+      "userCreatable": false,
+      "customEditor": "productContent@mozu"
+    },
+    {
       "entityType": "searchresult",
       "id": "search-results",
       "template": "search-results",
@@ -365,9 +820,30 @@
     },
     {
       "entityType": "customer",
+      "id": "seller_account",
+      "template": "seller-account",
+      "title": "Seller Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer",
       "id": "b2b_account",
       "template": "b2b-account",
       "title": "B2B Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer",
+      "id": "view_b2baccount",
+      "template": "view-b2baccount",
+      "title": "View B2B Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer",
+      "id": "b2b_account_request",
+      "template": "b2b-account-request",
+      "title": "B2B Account Request",
       "userCreatable": false
     },
     {
@@ -422,7 +898,7 @@
     "recaptchaSize": "normal",
     "recaptchaBadgePosition": "bottomright",
     "allowFilterByLocationInventory": false,
-    "backofficeDateTimeFormat": "m/d/Y H:i:s O",
+    "backofficeDateTimeFormat": "F j, Y",
     "extendedPropertiesEnabled": false,
     "extendedPropertyParameters": "",
     "isCvvSuppressed": false,
@@ -452,9 +928,7 @@
     "defaultSort": "createDate asc",
     "disableEditOfSavedCreditCard": true,
     "enablePartialCaching": true,
-    "loadGoogleFonts": [
-      "Source Sans Pro"
-    ],
+    "loadGoogleFonts": [ "Source Sans Pro" ],
     "primaryFont": "Source Sans Pro",
     "fontSize": "14px",
     "gutterWidth": "25px",
@@ -470,12 +944,12 @@
     "maxProductSummaryWords": 40,
     "maxTopLevelNavItems": 8,
     "maxTopLevelNavLabelLength": 20,
-    "pageSizeOptions": [
-      15,
-      25,
-      50,
-      100
-    ],
+    "monetateEnabled": false,
+    "monetateAsync": false,
+    "monetateAccountNumber": "",
+    "monetateDomain": "",
+    "monetateInstance": "p",
+    "pageSizeOptions": [ 15, 25, 50, 100 ],
     "preselectCountryCode": "US",
     "productImagesContainerWidth": 350,
     "requireCheckoutAgreeToTerms": true,
@@ -752,9 +1226,7 @@
       },
       "customEditor": "layout",
       "icon": "/resources/admin/widgets/1-col_icon.png",
-      "validPageTypes": [
-        "*"
-      ],
+      "validPageTypes": [ "*" ],
       "columns": [
         {
           "width": "100%"
@@ -773,9 +1245,7 @@
       },
       "customEditor": "layout",
       "icon": "/resources/admin/widgets/2-col_icon.png",
-      "validPageTypes": [
-        "*"
-      ],
+      "validPageTypes": [ "*" ],
       "columns": [
         {
           "width": "50%"
@@ -798,9 +1268,7 @@
       },
       "customEditor": "layout",
       "icon": "/resources/admin/widgets/3-col_icon.png",
-      "validPageTypes": [
-        "*"
-      ],
+      "validPageTypes": [ "*" ],
       "columns": [
         {
           "width": "33.3%"
@@ -827,9 +1295,7 @@
       },
       "customEditor": "layout",
       "icon": "/resources/admin/widgets/4-col_icon.png",
-      "validPageTypes": [
-        "*"
-      ],
+      "validPageTypes": [ "*" ],
       "columns": [
         {
           "width": "25%"
@@ -865,27 +1331,16 @@
           "fieldLabel": "Template",
           "name": "template",
           "store": [
-            [
-              "modules/product/product-list-tiled",
-              "tiled"
-            ],
-            [
-              "modules/product/product-list",
-              "list"
-            ],
-            [
-              "modules/product/product-list-carousel",
-              "carousel"
-            ]
+            [ "modules/product/product-list-tiled", "tiled" ],
+            [ "modules/product/product-list", "list" ],
+            [ "modules/product/product-list-carousel", "carousel" ]
           ],
           "xtype": "mz-input-dropdown"
         }
       ],
       "icon": "/resources/admin/widgets/01_photo_text.png",
       "id": "featured_product",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     },
     {
       "defaultConfig": {
@@ -903,9 +1358,7 @@
       ],
       "icon": "/resources/admin/widgets/08_video.png",
       "id": "video",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     },
     {
       "defaultConfig": {
@@ -926,18 +1379,9 @@
           "fieldLabel": "Template",
           "name": "template",
           "store": [
-            [
-              "primary",
-              "primary"
-            ],
-            [
-              "secondary",
-              "secondary"
-            ],
-            [
-              "tertiary",
-              "tertiary"
-            ]
+            [ "primary", "primary" ],
+            [ "secondary", "secondary" ],
+            [ "tertiary", "tertiary" ]
           ],
           "xtype": "mz-input-dropdown"
         },
@@ -956,9 +1400,7 @@
       ],
       "icon": "/resources/admin/widgets/22_category_navigation.png",
       "id": "catNav",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     },
     {
       "defaultConfig": {
@@ -981,18 +1423,9 @@
           "fieldLabel": "Template",
           "name": "template",
           "store": [
-            [
-              "modules/product/product-list-carousel",
-              "carousel"
-            ],
-            [
-              "modules/product/product-list-tiled",
-              "tiled"
-            ],
-            [
-              "modules/product/product-list",
-              "list"
-            ]
+            [ "modules/product/product-list-carousel", "carousel" ],
+            [ "modules/product/product-list-tiled", "tiled" ],
+            [ "modules/product/product-list", "list" ]
           ],
           "xtype": "mz-input-dropdown"
         },
@@ -1005,10 +1438,7 @@
       ],
       "icon": "/resources/admin/widgets/23_cross_sells.png",
       "id": "crosssells",
-      "validPageTypes": [
-        "product",
-        "cart"
-      ]
+      "validPageTypes": [ "product", "cart" ]
     },
     {
       "defaultConfig": {
@@ -1031,18 +1461,9 @@
           "fieldLabel": "Template",
           "name": "template",
           "store": [
-            [
-              "modules/product/product-list-carousel",
-              "carousel"
-            ],
-            [
-              "modules/product/product-list-tiled",
-              "tiled"
-            ],
-            [
-              "modules/product/product-list",
-              "list"
-            ]
+            [ "modules/product/product-list-carousel", "carousel" ],
+            [ "modules/product/product-list-tiled", "tiled" ],
+            [ "modules/product/product-list", "list" ]
           ],
           "xtype": "mz-input-dropdown"
         },
@@ -1055,10 +1476,7 @@
       ],
       "icon": "/resources/admin/widgets/27_up_sells.png",
       "id": "upsells",
-      "validPageTypes": [
-        "product",
-        "cart"
-      ]
+      "validPageTypes": [ "product", "cart" ]
     },
     {
       "defaultConfig": {
@@ -1081,18 +1499,9 @@
           "fieldLabel": "Template",
           "name": "template",
           "store": [
-            [
-              "modules/product/product-list-carousel",
-              "carousel"
-            ],
-            [
-              "modules/product/product-list-tiled",
-              "tiled"
-            ],
-            [
-              "modules/product/product-list",
-              "list"
-            ]
+            [ "modules/product/product-list-carousel", "carousel" ],
+            [ "modules/product/product-list-tiled", "tiled" ],
+            [ "modules/product/product-list", "list" ]
           ],
           "xtype": "mz-input-dropdown"
         },
@@ -1105,10 +1514,7 @@
       ],
       "icon": "/resources/admin/widgets/26_related_products.png",
       "id": "relatedproducts",
-      "validPageTypes": [
-        "product",
-        "cart"
-      ]
+      "validPageTypes": [ "product", "cart" ]
     },
     {
       "defaultConfig": {
@@ -1125,9 +1531,7 @@
       ],
       "icon": "/resources/admin/widgets/25_instock_requests.png",
       "id": "instockrequest",
-      "validPageTypes": [
-        "product"
-      ]
+      "validPageTypes": [ "product" ]
     },
     {
       "defaultConfig": {
@@ -1137,9 +1541,7 @@
       "displayTemplate": "cms/content",
       "icon": "/resources/admin/widgets/03_heading_p.png",
       "id": "content",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     },
     {
       "defaultConfig": {
@@ -1154,9 +1556,7 @@
       "customEditor": "image",
       "icon": "/resources/admin/widgets/00_photo.png",
       "id": "cms-image",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     },
     {
       "defaultConfig": {
@@ -1171,9 +1571,7 @@
       "customEditor": "horizontalrule",
       "icon": "/resources/admin/widgets/05_horizontal_divider.png",
       "id": "horizontal_rule",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     },
     {
       "defaultConfig": {
@@ -1194,9 +1592,7 @@
       ],
       "icon": "/resources/admin/widgets/07_code.png",
       "id": "html",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     },
     {
       "category": "social",
@@ -1242,9 +1638,7 @@
       ],
       "icon": "/resources/admin/widgets/13_social.png",
       "id": "addthis",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     },
     {
       "category": "catalog",
@@ -1253,9 +1647,7 @@
       "editView": "taco-dealoftheday-widgeteditor",
       "icon": "/resources/admin/widgets/28_deal_of_the_day.png",
       "id": "deal-of-the-day",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     },
     {
       "displayName": "Welcome mat",
@@ -1263,9 +1655,7 @@
       "customEditor": "welcomeMatEditor",
       "icon": "/resources/admin/widgets/borderFree.png",
       "id": "welcomemat",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     },
     {
       "displayName": "International Order Tracking",
@@ -1273,9 +1663,7 @@
       "customEditor": "borderFreeOrderTrackingEditor",
       "icon": "/resources/admin/widgets/borderFree.png",
       "id": "borderfreeordertracking",
-      "validPageTypes": [
-        "*"
-      ]
+      "validPageTypes": [ "*" ]
     }
   ]
 }

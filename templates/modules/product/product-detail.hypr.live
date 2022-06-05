@@ -13,9 +13,10 @@
 {% endif %}
 
 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">{{ labels.price }}</h4>
+  <h4 class="mz-l-stack-sectiontitle">{% if model.isSubscriptionOnly %} {{labels.subscriptionPrice}} {% else %} {{ labels.price }} {% endif %}</h4>
 {% include "modules/product/price-stack" %}
 </div>
+
 <div class="mz-price-container">
 <dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">
 	<dt class="mz-productcodes-productcode-label">{{ labels.productCode }}</dt>
@@ -27,8 +28,47 @@
 	{% if themeSettings.showProductDetailUPC and model.upc.length == 1 %}
 	<dt class="mz-productcodes-upc-label">{{ labels.upc }}</dt>
 	<dd class="mz-productcodes-upc" itemprop="mpn">{{ model.upc|first }}</dd>
-	{% endif %}
+	{% endif %}		
 </dl>
+
+{% if model.inventoryInfo and model.inventoryInfo.manageStock == true and model.inventoryInfo.outOfStockBehavior=='AllowBackOrder' and model.inventoryInfo.onlineStockAvailable<=0  %}
+	<div class="mz-product-backorder">
+		<span class="is-warning mz-product-backorder-warning">{{ labels.temporarilyOutOfStock }}</span>
+		<span >{{labels.temporarilyOutOfStockDetail}}</span>
+	</div>
+{% endif %}
+
+
+{% if model.subscriptionMode %}
+<div class="mz-productdetail-subscription mz-l-stack-section">
+  <div>
+    <input id="onetimepurchase" type="radio" name="purchasetype" value="onetimepurchase" {% if model.isSubscriptionOnly %} disabled="disabled" {% endif %}
+       data-mz-value="purchaseType"  {% if not model.isSubscriptionOnly %} checked="checked" {% endif %} /> {{ labels.subscriptionModeSAOT }}
+  </div>
+  <div>
+    <input id="subscribe" type="radio" name="purchasetype" value="subscribe"
+       data-mz-value="purchaseType" {% if model.isSubscriptionOnly %} checked="checked" {% endif %} />  {{ labels.subscriptionModeSO }}
+  </div>
+
+  <div class="mz-l-stack-section">
+    <h4 class="mz-l-stack-sectiontitle">{{ labels.subscriptionFrequency }}</h4>
+    <select id="frequency" class="mz-productoptions-option" data-mz-frequency  data-mz-value="subscriptionFrequency" {% if not model.isSubscriptionOnly %} disabled="disabled" {% endif %}>      
+        <option value=""></option>
+        {% for value in model.frequencyOptions %}
+        <option value="{{value.value}}">{{value.stringValue|default(value.value)}}</option>
+        {% endfor %}
+    </select>
+    <span id="frequencyValidation" class="mz-validationmessage" data-mz-validationmessage-for="subscriptionFrequency"></span>
+  </div>
+
+  {% if not model.isSubscriptionOnly %}
+  <div class="mz-l-stack-section">
+    <h4 class="mz-l-stack-sectiontitle">{{labels.subscriptionPrice}}</h4>  
+    {% include "modules/product/price-stack-subscription" %}  
+  </div>    
+  {% endif %}
+</div>
+{% endif %}
 
 <section class="mz-l-stack-section mz-productdetail-conversion">
 <div class="mz-productdetail-conversion-controls">
@@ -37,6 +77,7 @@
   <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
 </div>
   <div class="mz-productdetail-conversion-buttons">
+
   <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not model.isPurchasable %}is-disabled{% endif %}" {% if not model.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
       {{ labels.addToCart }}
   </button>
@@ -72,7 +113,17 @@
 
 {% if model.hasVolumePricing %}
 <div class="mz-volume-price-container">
-  {% include "modules/product/volume-pricing" %}
+  {% include "modules/product/volume-pricing" %}  
+  {% if model.subscriptionMode and not model.isSubscriptionOnly %}  
+  {% include "modules/product/volume-pricing-subscription" %}
+  {% endif %}
+</div>
+
+{% endif %}
+
+{% if model.productCollections %}
+<div class="mz-productdetail-collections mz-l-stack-section">
+  {% include "modules/product/product-detail-collections" %}
 </div>
 {% endif %}
 
@@ -104,10 +155,19 @@
   <dl class="mz-propertylist mz-propertylist-justified">
     {% for property in model.properties %}
     {% if property.values and not property.isHidden %}
-    <dt>{{property.attributeDetail.name}}</dt>
-    {% for v in property.values %}
-    <dd>{% if v.stringValue %}{{v.stringValue}}{% else %}{{v.value}}{% endif %}</dd>
-    {% endfor %}
+      {% if property.propertyType == "VariantProperty" %}
+        {% if model.variationProductCode %}
+          <dt>{{property.attributeDetail.name}}</dt>
+          {% for v in property.values %}
+          <dd>{% if v.stringValue %}{{v.stringValue}}{% else %}{{v.value}}{% endif %}</dd>
+          {% endfor %}
+        {% endif %}   
+      {% else %}  
+        <dt>{{property.attributeDetail.name}}</dt>
+        {% for v in property.values %}
+        <dd>{% if v.stringValue %}{{v.stringValue}}{% else %}{{v.value}}{% endif %}</dd>
+        {% endfor %}       
+      {% endif %}
     {% endif %}
     {% endfor %}
   </dl>

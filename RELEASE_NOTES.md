@@ -2,6 +2,21 @@
 
 ### October 31, 2017
 * Modified several files and introduced the Checkout model to enable shipments to multiple addresses. Before merging these changes, read about the [Multiple Shipments](https://www.mozu.com/docs/Guides/orders/multi-ship.htm) feature to determine whether you want to make the changes. - [Pull Request](https://github.com/Mozu/core-theme/pull/62)
+### December 7, 2020
+Add built-in support for the Monetate tag which includes the following API methods - [Pull Request](https://github.com/Mozu/core-theme/pull/267)
+* Track page type
+* Track products shown on page
+* Track breadcrumbs
+* Track items in cart
+* Track purchases
+
+Files modified:
+* templates\page.hypr (Embed the script)
+* theme.json (Set default values)
+* theme-ui.json (Create UI for inputing necesary data)
+
+Files added:
+* scripts\modules\monetate.js (Heavy lifter)
 
 ### March 29, 2017
 The following updates were added to the My Account page to improve the RMA experience for shoppers. - [Pull Request](https://github.com/Mozu/core-theme/pull/45)

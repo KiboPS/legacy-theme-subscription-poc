@@ -1,0 +1,80 @@
+<div class="mz-multiship-email" style="width: 100%;">
+    <div class="mz-table-header" style="padding:15px">
+        <span style="font-size:25px">{{ labels.subscriptionDetails }}</span>
+    </div>
+</div>
+
+<div class="mz-store-details subscription-info" style="background-color: #fff;">
+    <div>
+        <div><strong> {{ labels.subscriptionNumber }}</strong> : {{ model.number }}</div><br/>
+        <div><strong> {{ labels.subscriptionStatus }}</strong> : {{ model.status }} </div><br/>
+        <div><strong> {{ labels.frequency }}</strong>: {{model.frequency.value}} 
+        {% if model.frequency.value > 1 %}
+            {% if model.frequency.unit|lower == "day" %} {{ labels.days }} {% endif %}
+            {% if model.frequency.unit|lower == "week" %} {{ labels.weeks }} {% endif %}
+            {% if model.frequency.unit|lower == "month" %} {{ labels.months }} {% endif %}
+        {% else%}
+            {{model.frequency.unit}}
+        {% endif %}
+        </div><br/>
+        <div><strong> {{ labels.nextOrderDate }}</strong>: {{model.nextOrderDate|date("m/d/y")}}</div>
+    </div>
+</div>
+{% for item in model.items %}
+    {% if item.fulfillmentMethod == "Ship" %}
+        {% set_var shipmentMethod=item.fulfillmentMethod %}
+    {%endif%}
+ {%endfor%}
+    {% if shipmentMethod == "Ship" %}
+        {% if model.fulfillmentInfo.fulfillmentContact %}
+            <div class="subscription-info">
+                <div>
+                    <strong>
+                        {{labels.shipTo}} :
+                    </strong>
+                    <br/><br/>
+                    <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</div>
+                </div>
+            </div>
+            <br/><br/>
+        {% endif %}
+        {% if model.fulfillmentInfo.shippingMethodName %}
+            <div class="subscription-info">
+                <strong>
+                {{labels.shippingMethod}}:
+                </strong> 
+                {{model.fulfillmentInfo.shippingMethodName}}    
+            </div>
+            <br/><br/>
+        {%endif%}
+    {%endif%}
+    <div class="subscription-info">
+        <strong>
+        {{labels.paymentMethod}}: 
+        </strong>
+        {% if model.payment.billingInfo.paymentType == 'PurchaseOrder' %} {{ labels.purchaseOrder }}<br/>
+            <b>{{ labels.purchaseOrderNumber }}</b>:{{model.payment.billingInfo.purchaseOrder.purchaseOrderNumber}} 
+        {% endif %}
+        {% if model.payment.billingInfo.paymentType == 'CreditCard' %} {{model.payment.billingInfo.card.paymentOrCardType}} {{model.payment.billingInfo.card.cardNumberPartOrMask}} {% endif %}
+        {% if model.payment.billingInfo.paymentType == 'Check' %} {{ labels.check }} {% endif %}
+        {% if model.payment.billingInfo.paymentType == "StoreCredit" %}
+            {{ labels.storeCreditCode }} {{ model.payment.billingInfo.storeCreditCode }}
+        {% endif %}
+        {% if model.payment.billingInfo.paymentType == "GiftCard" %}
+            {{ model.payment.billingInfo.card.paymentOrCardType }} {{ model.payment.billingInfo.card.cardNumberPartOrMask }}
+        {% endif %}
+        {% if  model.payment.billingInfo.paymentType|lower == "paypalexpress2"  %}
+            {{ labels.paypalExpress }}
+        {% endif %}
+        {%if model.payment.billingInfo.paymentType|lower == "paywithamazon" %}
+            {{ labels.payWithAmazon }}
+        {% endif %}
+        {% if model.payment.paymentType|lower == "token" %}
+            {% if model.payment.billingInfo.token.type|lower == "paywithamazon" %}
+                {{ labels.payWithAmazon }}
+            {% endif %}
+            {% if model.payment.billingInfo.token.type|lower == "applepay" %}
+                {{ labels.applePay }}
+            {% endif %}
+        {% endif %}
+    </div>

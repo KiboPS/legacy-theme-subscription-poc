@@ -31,16 +31,16 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         },
         render: function () {
             var me = this;
-            if (this.oldOptions) {
-                me.model.get('options').map(function (option) {
-                    var oldOption = _.find(me.oldOptions, function (old) {
-                        return old.attributeFQN === option.get('attributeFQN');
-                    });
-                    if (oldOption) {
-                        option.set('values', oldOption.values);
-                    }
-                });
-            }
+            // if (this.oldOptions) {
+            //     me.model.get('options').map(function (option) {
+            //         var oldOption = _.find(me.oldOptions, function (old) {
+            //             return old.attributeFQN === option.get('attributeFQN');
+            //         });
+            //         if (oldOption) {
+            //             option.set('values', oldOption.values);
+            //         }
+            //     });
+            // }
             Backbone.MozuView.prototype.render.apply(this);
             this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
                 $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
@@ -85,7 +85,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
             var self = this;
             e.preventDefault();
             self.model.trigger('configurationComplete', self);
-            
+
             // try {
             //     self.model.addToCart(true).then(function () {
             //         this.model.parent.handleDialogCancel();
@@ -115,23 +115,32 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         initialize: function () {
             // handle preset selects, etc
             var me = this;
-            this.$('[data-mz-product-option]').each(function () {
-                var $this = $(this), isChecked, wasChecked;
-                if ($this.val()) {
-                    switch ($this.attr('type')) {
-                        case "checkbox":
-                        case "radio":
-                            isChecked = $this.prop('checked');
-                            wasChecked = !!$this.attr('checked');
-                            if ((isChecked && !wasChecked) || (wasChecked && !isChecked)) {
-                                me.configure($this);
-                            }
-                            break;
-                        default:
-                            me.configure($this);
-                    }
-                }
-            });
+            var productModel = this.model;
+            var pickerItemQuantity = window.views ? window.views.currentPane.model.get('pickerItemQuantity') : this.model.get('quantity');
+            this.model.set('quantity', pickerItemQuantity);
+
+              me.$('[data-mz-product-option]').each(function () {
+                  var $this = $(this), isChecked, wasChecked;
+                  if ($this.val()) {
+                      switch ($this.attr('type')) {
+                          case "checkbox":
+                          case "radio":
+                              isChecked = $this.prop('checked');
+                              wasChecked = !!$this.attr('checked');
+                              if ((isChecked && !wasChecked) || (wasChecked && !isChecked)) {
+                                  me.configure($this);
+                              }
+                              break;
+                          default:
+                              me.configure($this);
+                      }
+                  }
+              });
+
+            //   me.listenTo(me.model, 'optionsUpdated', function(){
+            //       me.postponeRender = false;
+            //       me.render();
+            //   });
         }
     });
 
@@ -147,8 +156,10 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
             if (self.model.messages) {
                 self.model.messages.reset();
             }
-            self._addProductView.stopListening();
-            self._addProductView.undelegateEvents();
+            if (self._addProductView){
+              self._addProductView.stopListening();
+              self._addProductView.undelegateEvents();
+            }
             self.bootstrapInstance.hide();
         },
         handleDialogCancel: function () {
@@ -170,7 +181,9 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         },
         loadAddProductView: function (product) {
             var self = this;
-            
+            if (self.model.messages) {
+                self.model.messages.reset();
+            }
             var addProductView = new AddProductView({
                 el: $(self.modalContentEl()),
                 model: product,

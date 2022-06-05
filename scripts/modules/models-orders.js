@@ -1,6 +1,7 @@
 define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modules/models-product", "modules/models-returns"], function(api, _, Backbone, Hypr, ProductModels, ReturnModels) {
 
     var OrderItem = Backbone.MozuModel.extend({
+            idAttribute: 'lineId',
             relations: {
                 product: ProductModels.Product
             },
@@ -107,6 +108,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             model: OrderPackage
         }),
         OrderItemBit = Backbone.MozuModel.extend({
+            idAttribute: 'lineId',
             relations: {
                 product: ProductModels.Product
             },
@@ -307,7 +309,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 rma: ReturnModels.RMA
             },
             handlesMessages: true,
-            helpers: ['getNonShippedItems', 'hasFulfilledPackages', 'hasFulfilledPickups', 'hasFulfilledDigital', 'getInStorePickups', 'getReturnableItems'],
+            helpers: ['getNonShippedItems', 'hasFulfilledPackages', 'hasOrderFulfilled', 'hasFulfilledPickups', 'hasFulfilledDigital', 'getInStorePickups', 'getReturnableItems'],
             _nonShippedItems: {},
             initialize: function() {
                 var self = this;
@@ -330,6 +332,10 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                     }
                 });
                 return hasfulfilledPackage;
+            },
+            hasOrderFulfilled: function() {
+                var self = this;
+                return (self.get('fulfillmentStatus') === "Fulfilled" || self.get('fulfillmentStatus') === "PartiallyFulfilled");
             },
             hasFulfilledPickups: function() {
                 var self = this,

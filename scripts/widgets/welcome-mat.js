@@ -44,7 +44,8 @@ require([
           selectedCurrency: selectedCurrency,
           selectedCountryCode: selectedCountryCode,
           currency: hasCurrencies,
-          defaultCountry: appConfig.country
+          defaultCountry: appConfig.country,
+          appConfig: appConfig
         });
         window.view.render();
         if (self.$el.find(".welcome-mat-wrapper").hasClass("hidden")) {
@@ -69,7 +70,9 @@ require([
                       name: item.name,
                       currencyCode: item.currencyCode,
                       locale: item.locale,
-                      languageCode: item.languageCode
+                      languageCode: item.languageCode,
+                      countryCode: item.$.code,
+                      isShipToEnabled: item.isShipToEnabled
                     };
                   }
                 );
@@ -80,7 +83,7 @@ require([
                   function(item) {
                     return {
                       name: item.name,
-                      symbol: item.symbol,
+                      symbol: item.$.code,
                       isCurrencyEnabled: item.isCurrencyEnabled
                     };
                   }
@@ -126,7 +129,7 @@ require([
             var selectedCountryName = $(selectedCountry).find(
               "option:selected"
             );
-
+            var exchangeRates = (!_.isEmpty(resp) && typeof(resp) === "string") ? JSON.parse(resp) : resp;
             self.setCookies(
               "currency_code_override",
               selectedCurrency.val(),
@@ -142,7 +145,7 @@ require([
               selectedCountryName.attr("data-code"),
               1
             );
-            self.setCookies("currency_QuoteId", resp.referenceData, 1);
+            self.setCookies("currency_QuoteId", exchangeRates.referenceData, 1);
             window.location.reload();
           },
           function(e) {}
