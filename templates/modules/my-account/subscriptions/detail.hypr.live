@@ -1,0 +1,6 @@
+<div class="subscription-listing" data-subscription-id="{{model.id}}">
+    <h4 class="id">Subscription: {{model.id}}</h4>
+    <p class="next-date">Next Order Date: {{model.nextOrderDate}}</p>
+    <button class="skip" data-mz-action="skip">Skip</button>
+    <button class="ordernow" data-mz-action="orderNow">Order Now</button>
+</div>

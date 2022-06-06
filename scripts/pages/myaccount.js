@@ -1,4 +1,4 @@
-define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView) {
+define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view', 'modules/subscriptions/views-subscriptions'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView, SubscriptionViews) {
 
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
@@ -657,13 +657,15 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
             $passwordEl = $('#password-section'),
             $orderHistoryEl = $('#account-orderhistory'),
             $returnHistoryEl = $('#account-returnhistory'),
+            $subscriptionEl = $('#account-subscriptions'),
             $paymentMethodsEl = $('#account-paymentmethods'),
             $addressBookEl = $('#account-addressbook'),
             $wishListEl = $('#account-wishlist'),
             $messagesEl = $('#account-messages'),
             $storeCreditEl = $('#account-storecredit'),
             orderHistory = accountModel.get('orderHistory'),
-            returnHistory = accountModel.get('returnHistory');
+            returnHistory = accountModel.get('returnHistory'),
+            subscriptions = accountModel.get('subscriptions');
 
         var accountViews = window.accountViews = {
             settings: new AccountSettingsView({
@@ -693,6 +695,10 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
             returnHistory: new ReturnHistoryView({
                 el: $returnHistoryEl.find('[data-mz-orderlist]'),
                 model: returnHistory
+            }),
+            subscriptions: new SubscriptionViews.SubscriptionsView({
+                el: $subscriptionEl,
+                model: subscriptions
             }),
             returnHistoryPagingControls: new PagingViews.PagingControls({
                 templateName: 'modules/my-account/order-history-paging-controls',

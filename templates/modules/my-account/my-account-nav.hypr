@@ -23,6 +23,11 @@
             </a>
         </li>
         <li class="mz-scrollnav-item">
+            <a class="mz-scrollnav-link" href="#subscriptions">
+                {{ labels.subscriptions }}
+            </a>
+        </li>
+        <li class="mz-scrollnav-item">
             <a class="mz-scrollnav-link" href="#paymentmethods">
                 {{ labels.paymentMethods }}
             </a>

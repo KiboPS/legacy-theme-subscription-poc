@@ -599,7 +599,8 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
         OrderItem: OrderItem,
         Order: Order,
         OrderCollection: OrderCollection,
-        OrderPackage: OrderPackage
+        OrderPackage: OrderPackage,
+        OrderItemsList: OrderItemsList
     };
 
 });

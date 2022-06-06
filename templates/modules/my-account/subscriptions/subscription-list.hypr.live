@@ -1,0 +1,4 @@
+{% for subscription in model.items %}
+    {% include "modules/my-account/subscriptions/detail" with model=subscription %}
+
+{% endfor %}

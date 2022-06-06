@@ -4,10 +4,23 @@
  * (tenant, catalog and store IDs, and authorization tickets).
  */
 
-define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) { 
+define(['sdk', 'jquery', 'hyprlive', 'modules/subscriptions/sdk'], function (Mozu, $, Hypr, Subscriptions) { 
     var apiConfig = require.mozuData('apicontext');
+    apiConfig.urls.subscriptionService = '/api/commerce/subscriptions/';
     Mozu.setServiceUrls(apiConfig.urls);
     var api = Mozu.Store(apiConfig.headers).api();
+    Subscriptions.configure.apply(Mozu, api);
+
+    var oldGetAvailableActionsFor = api.getAvailableActionsFor;
+    api.getAvailableActionsFor = function(type) {
+        if(type === 'subscription') {
+            return Subscriptions.getSubscriptionActions();
+        } else if (type === 'subscriptions') {
+            return Subscriptions.getSubscriptionsActions();
+        } else {
+            return oldGetAvailableActionsFor(type);
+        }
+    };
 
     var extendedPropertyParameters = Hypr.getThemeSetting('extendedPropertyParameters');
     if (extendedPropertyParameters && Hypr.getThemeSetting('extendedPropertiesEnabled')) {
