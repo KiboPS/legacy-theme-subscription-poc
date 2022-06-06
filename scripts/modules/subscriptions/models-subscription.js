@@ -6,18 +6,14 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
         relations: {
             items: OrderModels.OrderItemsList
         },
-        // initialize: function() {
-        //     // _.extend(this, Backbone.Events);
-        //     // this.setUrls();
-        //     // this.set('accountModel', window.accountModel.toJSON());
-        //     // this.setDate();
-        //     // this.initializeAddresses();
-        // },
         skip: function() {
             this.apiSkip();
         },
         orderNow: function() {
-            this.apiOrderNow();
+            var self = this;
+            this.apiOrderNow().then(function(res) {
+                self.set('nextOrderDate', res.nextOrderDate);
+            });
         }
     });
 

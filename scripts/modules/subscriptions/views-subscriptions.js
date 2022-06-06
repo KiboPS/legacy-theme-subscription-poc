@@ -11,13 +11,11 @@ define(['modules/api', 'modules/jquery-mozu', 'modules/backbone-mozu'], function
             var self = this;
             self.subscriptionViews = [];
             Backbone.MozuView.prototype.render.apply(this, arguments);
-            console.log(this.$el.find('[data-subscription-id]'));
-            $.each(this.$el.find('[data-subscription-id]'), function(index, val) {
-                console.log(this);
+            $.each(this.$el.find('.subscription-listing'), function(index, val) {
                 var subscriptionId = $(this).data('subscriptionId');
                 var subscription = self.model.get('items').get(subscriptionId);
                 var subscriptionView = new SubscriptionView({
-                    el: this,
+                    el: $(this).find('.subscription-listing-content'),
                     model: subscription
                 });
                 subscriptionView.render();
@@ -34,8 +32,6 @@ define(['modules/api', 'modules/jquery-mozu', 'modules/backbone-mozu'], function
         },
         render: function() {
             Backbone.MozuView.prototype.render.apply(this, arguments);
-            // $("select:not(.ignore)").niceSelect();
-            this.showDate();
         },
         skip: function() {
             this.model.skip();

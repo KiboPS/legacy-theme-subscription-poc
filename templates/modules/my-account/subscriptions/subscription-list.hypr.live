@@ -1,4 +1,12 @@
+<style>
+    .subscription-listing {
+        border: 1px solid black;
+        padding: 20px;
+    }
+</style>
 {% for subscription in model.items %}
-    {% include "modules/my-account/subscriptions/detail" with model=subscription %}
+<div class="subscription-listing" data-subscription-id="{{subscription.id}}">
 
+    {% include "modules/my-account/subscriptions/detail" with model=subscription %}
+</div>
 {% endfor %}

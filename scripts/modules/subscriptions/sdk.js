@@ -79,7 +79,6 @@ define([], function () {
         return {
             updateItemQuantity: function (conf) {
                 var itemId = conf.itemId, quantity = conf.quantity;
-                console.log('custom function', quantity);
                 var self = this;
 
                 return self.api.action('subscription', 'update-item-quantity', { id: self.data.id, itemId: itemId, quantity: quantity })
@@ -88,47 +87,45 @@ define([], function () {
                     });
             },
             orderNow: function () {
-                console.log('custom function!');
                 var self = this;
                 var today = new Date().toISOString();
                 return self.api.action('subscription', 'order-now', { id: self.data.id }, {
                     nextOrderDate: today
-                }).then(function (data) {
-                    return data;
+                }).then(function(res){
+                    return res.data;
                 });
             }
-        }
+        };
     };
 
     var configure = function (api) {
         this.ApiReference.methods.subscription = subscriptionConfiguration;
         this.ApiReference.methods.subscriptions = subscriptionsConfiguration;
         this.ApiObject.types.subscription = subscriptionFunctions(api);
-        console.log(this);
     };
 
-    var actionNameCallback = function (key) {
-        var keyArr = key.split('-');
-        if (keyArr.length === 1) {
-            return key;
-        } else {
-            return keyArr.map(function (keyItem, i) {
-                if (i > 0) {
-                    return keyItem.charAt(0).toUpperCase() + keyItem.substring(1);
-                } else {
-                    return keyItem;
-                }
-            }).join('');
-        }
+    var getActions = function (config) {
+        return Object.keys(config).map(function(key) {
+            var keyArr = key.split('-');
+            if (keyArr.length === 1) {
+                return key;
+            } else {
+                return keyArr.map(function (keyItem, i) {
+                    if (i > 0) {
+                        return keyItem.charAt(0).toUpperCase() + keyItem.substring(1);
+                    } else {
+                        return keyItem;
+                    }
+                }).join('');
+            }
+        });
     };
 
     var getSubscriptionActions = function () {
-        var functions = Object.keys(subscriptionConfiguration).map(actionNameCallback);
-        return functions;
+        return getActions(subscriptionConfiguration);
     };
     var getSubscriptionsActions = function () {
-        var functions = Object.keys(subscriptionsConfiguration).map(actionNameCallback);
-        return functions;
+        return getActions(subscriptionsConfiguration);
     };
 
     return {
