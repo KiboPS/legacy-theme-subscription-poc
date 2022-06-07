@@ -53,7 +53,6 @@ define([], function () {
         },
         "perform-action": {
             "template": "{+subscriptionService}{id}/actions",
-            "shortcutParam": "id",
             "includeSelf": true,
             "verb": "PUT"
         },
@@ -96,8 +95,18 @@ define([], function () {
                 var today = new Date().toISOString();
                 return self.api.action('subscription', 'order-now', { id: self.data.id }, {
                     nextOrderDate: today
-                }).then(function(res){
+                }).then(function (res) {
                     return res.data;
+                });
+            },
+            performAction: function (conf) {
+                console.log(conf);
+                var self = this;
+                return self.api.action('subscription', 'perform-action',{
+                        id: self.data.id,
+                        actionName: conf.actionName,
+                        reason: conf.reason
+                    
                 });
             }
         };
@@ -113,7 +122,7 @@ define([], function () {
 
     // transforms a list of function names like "order-now" into a list of function names like "orderNow".
     var getActions = function (config) {
-        return Object.keys(config).map(function(key) {
+        return Object.keys(config).map(function (key) {
             var keyArr = key.split('-');
             if (keyArr.length === 1) {
                 return key;

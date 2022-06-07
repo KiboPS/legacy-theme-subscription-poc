@@ -381,6 +381,7 @@
             var self = this,
                 orderHistory = this.get('orderHistory'),
                 returnHistory = this.get('returnHistory'),
+                subscriptions = this.get('subscriptions'),
                 quoteHistory = this.get('quoteHistory'),
                 b2bContactHistory = this.get('b2bContactHistory');
             this.get('editingContact').set('accountId', this.get('id'));
