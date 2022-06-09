@@ -61,6 +61,11 @@ define([], function () {
             "shortcutParam": "id",
             "includeSelf": true,
             "verb": "PUT"
+        },
+        "add-item": {
+            "template": "{+subscriptionService}{id}/items",
+            "verb": "POST",
+            "shortcutParam": "id"
         }
     };
 
@@ -115,6 +120,15 @@ define([], function () {
                 actionName: conf.actionName,
                 reason: conf.reason
 
+            });
+        },
+        addItem: function(payload) {
+            var self = this;
+            return self.api.action('subscription', 'add-item', {
+                id: self.data.id,
+                product: payload.product,
+                quantity: payload.quantity,
+                fulfillmentMethod: payload.fulfillmentMethod
             });
         }
     };

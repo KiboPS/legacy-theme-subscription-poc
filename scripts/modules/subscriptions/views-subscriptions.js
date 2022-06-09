@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view'], function($, Backbone, EditableView) {
+define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view', 'modules/preserve-element-through-render'], function($, Backbone, EditableView, preserveElement) {
     var SubscriptionsView = Backbone.MozuView.extend({
         templateName: "modules/my-account/subscriptions/myaccount-subscriptions",
         additionalEvents: { 
@@ -33,10 +33,23 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view']
             var self = this;
             this.listenTo(this.model, 'change', this.render, this);
         },
+        render: function() {
+            preserveElement(this, ['.mz-itemlisting-thumb'], function() {
+                Backbone.MozuView.prototype.render.call(this);
+            });
+        },
         constructor: function() {
             EditableView.apply(this, arguments);
             this.editing = {};
             this.invalidFields = {};
+        },
+        editActions: function() {
+            this.editing.actions = true;
+            this.render();
+        },
+        cancelEditActions: function() {
+            this.editing.actions = false;
+            this.render();
         },
         editNextOrderDate: function() {
             this.editing.nextOrderDate = true;
@@ -44,6 +57,14 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view']
         },
         cancelEditNextOrderDate: function() {
             this.editing.nextOrderDate = false;
+            this.render();
+        },
+        editItems: function() {
+            this.editing.items = true;
+            this.render();
+        },
+        cancelEditItems: function() {
+            this.editing.items = false;
             this.render();
         },
         editFrequency: function() {
@@ -73,8 +94,6 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view']
                         propsToUpdate[el.dataset.mzValue] = newValue;
 
                 }
-
-
             });
 
             this.editing.nextOrderDate = false;
@@ -124,6 +143,14 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view']
             var itemId = e.target.dataset.itemId;
             var newQuantity = self.$el.find('input#quantity-input-' + itemId).val();
             this.model.updateQuantity(newQuantity, itemId);
+        },
+        addItem: function(e) {
+            // e.preventDefault();
+            var self = this;
+            var product = $('#add-item-input-' + self.model.get('id')).val();
+            var quantity = $('#item-quantity-' + self.model.get('id')).val();
+            self.model.addItem(product, quantity);
+
         }
     });
 

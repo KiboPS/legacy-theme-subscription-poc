@@ -59,7 +59,6 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
             });
         },
         pause: function (reason) {
-            console.log('pause');
             this.apiPerformAction(
                 {
                     actionName: 'Pause',
@@ -70,7 +69,6 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
             });
         },
         cancel: function (reason) {
-            console.log('cancel');
             this.apiPerformAction(
                 {
                     actionName: 'Cancel',
@@ -81,7 +79,6 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
             });
         },
         activate: function () {
-            console.log('activate');
             this.apiPerformAction(
                 {
                     actionName: 'Activate',
@@ -103,6 +100,20 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
                 id: self.get('id')
             };
             self.apiUpdateItemQuantity(conf).then(function(res) {
+                self.apiGet();
+            });
+        },
+        addItem: function(product, quantity) {
+            var self = this;
+            var payload = {
+                product: {
+                    productCode: product
+                },
+                quantity: quantity || 1,
+                fulfillmentMethod: 'Ship'
+            };
+
+            self.apiAddItem(payload).then(function(res) {
                 self.apiGet();
             });
         }

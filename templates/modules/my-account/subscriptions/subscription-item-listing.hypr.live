@@ -24,11 +24,13 @@
     </div>  
 {% endblock item-details %}
 {% block item-listing-actions %}
-    <div class="form-field-group">
-        <label for="quantity-input-{{model.id}}">Update Quantity</label>
-        <input id="quantity-input-{{model.id}}" type="number">
-        <button data-mz-action="updateQuantity" data-item-id="{{model.id}}">Save</button>
-    </div>
+    {% if editing.items %}
+        <div class="form-field-group">
+            <label for="quantity-input-{{model.id}}">Update Quantity</label>
+            <input id="quantity-input-{{model.id}}" type="number">
+            <button data-mz-action="updateQuantity" data-item-id="{{model.id}}">Save</button>
+        </div>
+    {% endif %}
 {% endblock item-listing-actions %}
 {% block item-listing-extras %}
 {% if returning == model.id %}
