@@ -1,0 +1,29 @@
+<li class="mz-orderlisting-details-item">
+  {% if editing.frequency %}
+    <div>
+        <dl class="mz-propertylist mz-propertylist-order">
+            <dt><label for="subscription-frequency-value-{{model.id}}" class="">Frequency Value</label></dt>
+            <dd>
+                <select id="subscription-frequency-value-{{model.id}}" subscription-input class="update-frequency-input" type="text" data-mz-value="frequency-value" data-old-value="{{ model.frequency.value }}">
+                    {% for value in model.validFrequencyValues %}
+                        <option value="{{value}}">{{value}}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+            <dt><label for="subscription-frequency-unit-{{model.id}}" class="">Frequency Unit</label></dt>
+            <dd>
+                <select id="subscription-frequency-unit-{{model.id}}" subscription-input class="update-frequency-input" type="text" data-mz-value="frequency-unit" data-old-value="{{ model.frequency.unit }}">
+                    {% for unit in model.validFrequencyUnits %}
+                        <option value="{{unit}}">{{unit}}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+        </dl>
+    </div>
+  {% else %}
+    <dl class="mz-propertylist mz-propertylist-order">
+        <dt>{{ labels.subscriptionFrequency }}</dt>
+        <dd>{{ "{0} {1} {2}s"|string_format(labels.every, model.frequency.value, model.frequency.unit) }}</dd>
+    </dl>
+    {% endif %}
+</li>

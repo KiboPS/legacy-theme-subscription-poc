@@ -1,12 +1,11 @@
 <li class="mz-orderlisting-details-item">
-  {% if editing %}
+  {% if editing.nextOrderDate %}
     <div>
-        
+      <dl class="mz-propertylist mz-propertylist-order">
+          <dt><label for="subscription-nextorderdate-{{model.id}}" class="">{{ labels.nextOrderDate }}</label></dt>
+          <dd><input id="subscription-nextorderdate-{{model.id}}" subscription-input class="next-order-date" type="date" data-mz-value="nextOrderDate" data-old-value="{{ model.nextOrderDate }}" /></dd>
+      </dl>
     </div>
-    <dl class="mz-propertylist mz-propertylist-order">
-        <dt><label for="subscription-nextorderdate" class="">{{ labels.nextOrderDate }}</label></dt>
-        <dd><input id="subscription-nextorderdate" subscription-input class="next-order-date" type="date" data-mz-value="nextOrderDate" data-old-value="{{ model.nextOrderDate }}" /></dd>
-    </dl>
   {% else %}
     <dl class="mz-propertylist mz-propertylist-order">
         <dt>{{ labels.nextOrderDate }}</dt>

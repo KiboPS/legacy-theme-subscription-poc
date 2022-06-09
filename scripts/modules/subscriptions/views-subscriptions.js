@@ -35,20 +35,29 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view']
         },
         constructor: function() {
             EditableView.apply(this, arguments);
-            this.editing = false;
+            this.editing = {};
             this.invalidFields = {};
         },
-        edit: function() {
-            this.editing = true;
+        editNextOrderDate: function() {
+            this.editing.nextOrderDate = true;
             this.render();
         },
-        cancelEdit: function() {
-            this.editing = false;
+        cancelEditNextOrderDate: function() {
+            this.editing.nextOrderDate = false;
             this.render();
         },
-        save: function() {
-            var inputs = $('[subscription-input]');
-            // console.log(inputs);
+        editFrequency: function() {
+            this.editing.frequency = true;
+            this.render();
+        },
+        cancelEditFrequency: function() {
+            this.editing.frequency = false;
+            this.render();
+        },
+        updateNextOrderDate: function(e) {
+            e.preventDefault();
+            var self = this;
+            var inputs = $('input#subscription-nextorderdate-' + self.model.get('id'));
             var propsToUpdate = {};
             inputs.each(function(i, input) {
                 var el = $(input)[0];
@@ -57,7 +66,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view']
 
                 switch(el.type) {
                     case 'date':
-                        var date = new Date(newValue).toISOString();
+                        var date = newValue + 'T00:00:00.001Z';
                         propsToUpdate[el.dataset.mzValue] = date;
                         break;
                     default:
@@ -68,9 +77,21 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view']
 
             });
 
-            this.model.saveChanges(propsToUpdate);
-            this.editing = false;
-            this.render();
+            this.editing.nextOrderDate = false;
+            this.model.updateNextOrderDate(propsToUpdate);
+        },
+        updateFrequency: function(e) {
+            e.preventDefault();
+            var self = this;
+            var id = self.model.get('id');
+            var unit = $('select#subscription-frequency-unit-' + id);
+            var value = $('select#subscription-frequency-value-' + id);
+            var frequency = {
+                unit: unit.val(),
+                value: value.val()
+            };
+            this.editing.frequency = false;
+            this.model.updateFrequency(frequency);
         },
         render: function() {
             Backbone.MozuView.prototype.render.apply(this, arguments);
@@ -97,6 +118,12 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view']
         },
         activate: function() {
             this.model.activate();
+        },
+        updateQuantity: function(e) {
+            var self = this;
+            var itemId = e.target.dataset.itemId;
+            var newQuantity = self.$el.find('input#quantity-input-' + itemId).val();
+            this.model.updateQuantity(newQuantity, itemId);
         }
     });
 

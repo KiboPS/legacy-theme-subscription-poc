@@ -1,17 +1,52 @@
 define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modules/models-orders'], function (Backbone, _, api, Hypr, OrderModels) {
 
+    var SubscriptionItem = OrderModels.OrderItem.extend({
+        idAttribute: 'id'
+    });
+
     var Subscription = Backbone.MozuModel.extend({
         mozuType: 'subscription',
         idAttribute: 'id',
         relations: {
-            items: OrderModels.OrderItemsList
+            items: Backbone.Collection.extend({
+                model: SubscriptionItem
+            })
         },
-        saveChanges: function(props) {
+        initialize: function() {
             var self = this;
-            console.log(props);
+            self.configureValidFrequencies();
+        },
+        configureValidFrequencies: function() {
+            var self = this;
+            var items = self.get('items');
+            var validFrequencyValues = [];
+            var validFrequencyUnits = [];
+
+            items.forEach(function(item) {
+                var itemFrequencies = item.get('product').get('properties').find(function(prop) {
+                    return prop.attributeFQN === 'system~subscription-frequency';
+                });
+                itemFrequencies.values.forEach(function(value) {
+                    validFrequencyUnits.push(value.value.charAt(0) === 'W' ? 'week' : 'day');
+                    validFrequencyValues.push(value.value.substring(1));
+                });
+            });
+
+            self.set('validFrequencyUnits', Array.from(new Set(validFrequencyUnits)));
+            self.set('validFrequencyValues', Array.from(new Set(validFrequencyValues)));
+        },
+        updateNextOrderDate: function(props) {
+            var self = this;
             this.set(props);
-            this.apiUpdate().then(function(res) {
-                self.set(res);
+            this.apiUpdateNextOrderDate({nextOrderDate: props.nextOrderDate}).then(function(res) {
+                self.apiGet();
+            });
+        },
+        updateFrequency: function(frequency) {
+            var self = this;
+            this.set('frequency', frequency);
+            this.apiUpdateFrequency(frequency).then(function(res) {
+                self.apiGet();
             });
         },
         skip: function () {
@@ -58,6 +93,17 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
                 }
             ).then(function(res) {
                 this.set(res);
+            });
+        },
+        updateQuantity: function(newQuantity, itemId) {
+            var self = this;
+            var conf = {
+                quantity: newQuantity,
+                itemId: itemId,
+                id: self.get('id')
+            };
+            self.apiUpdateItemQuantity(conf).then(function(res) {
+                self.apiGet();
             });
         }
     });

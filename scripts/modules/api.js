@@ -11,7 +11,7 @@ define(['sdk', 'jquery', 'hyprlive', 'modules/subscriptions/sdk'], function (Moz
     var api = Mozu.Store(apiConfig.headers).api();
 
     // creates and sets subscription api configurations on the sdk object.
-    Subscriptions.configure.apply(Mozu, api);
+    Subscriptions.configure.apply(Mozu);
 
     var oldGetAvailableActionsFor = api.getAvailableActionsFor;
     // overrides the getAvailableActionsFor function so that backboneMozuModel can correctly build functions for subscription types.

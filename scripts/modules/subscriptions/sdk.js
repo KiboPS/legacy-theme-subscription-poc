@@ -77,47 +77,54 @@ define([], function () {
         }
     };
 
-    // these functions will override the default functions provided by the subscription storefront sdk.  They can provide default parameters and enforce validation on payloads.
-    // inside each, "this" will refer to the subscription object invoking the call.  "this.data" will be the raw json version of the subscription if you need to get properties from them.
-    var subscriptionFunctions = function () {
-        return {
-            updateItemQuantity: function (conf) {
-                var itemId = conf.itemId, quantity = conf.quantity;
-                var self = this;
+    // these functions will override the default functions provided by the subscription storefront sdk.
+    // They can provide default parameters and enforce validation on payloads.
+    // inside each, "this" will refer to the subscription object invoking the call.  
+    // "this.data" will be the raw json version of the subscription if you need to get properties from them.
+    var subscriptionFunctions = {
+        updateItemQuantity: function (conf) {
+            var itemId = conf.itemId,
+                quantity = conf.quantity;
+            var self = this;
 
-                return self.api.action('subscription', 'update-item-quantity', { id: self.data.id, itemId: itemId, quantity: quantity })
-                    .then(function (data) {
-                        return data;
-                    });
-            },
-            orderNow: function () {
-                var self = this;
-                var today = new Date().toISOString();
-                return self.api.action('subscription', 'order-now', { id: self.data.id }, {
-                    nextOrderDate: today
-                }).then(function (res) {
-                    return res.data;
+            return self.api.action('subscription', 'update-item-quantity', {
+                    id: self.data.id,
+                    itemId: itemId,
+                    quantity: quantity
+                })
+                .then(function (data) {
+                    return data;
                 });
-            },
-            performAction: function (conf) {
-                console.log(conf);
-                var self = this;
-                return self.api.action('subscription', 'perform-action',{
-                        id: self.data.id,
-                        actionName: conf.actionName,
-                        reason: conf.reason
-                    
-                });
-            }
-        };
+        },
+        orderNow: function () {
+            var self = this;
+            var today = new Date().toISOString();
+            return self.api.action('subscription', 'order-now', {
+                id: self.data.id
+            }, {
+                nextOrderDate: today
+            }).then(function (res) {
+                return res.data;
+            });
+        },
+        performAction: function (conf) {
+            console.log(conf);
+            var self = this;
+            return self.api.action('subscription', 'perform-action', {
+                id: self.data.id,
+                actionName: conf.actionName,
+                reason: conf.reason
+
+            });
+        }
     };
 
     // adds required properties to the sdk object for use on the page.
-    var configure = function (api) {
+    var configure = function () {
         // "this" refers to the sdk object exported by sdk-min.js or sdk-debug.js
         this.ApiReference.methods.subscription = subscriptionConfiguration;
         this.ApiReference.methods.subscriptions = subscriptionsConfiguration;
-        this.ApiObject.types.subscription = subscriptionFunctions(api);
+        this.ApiObject.types.subscription = subscriptionFunctions;
     };
 
     // transforms a list of function names like "order-now" into a list of function names like "orderNow".
