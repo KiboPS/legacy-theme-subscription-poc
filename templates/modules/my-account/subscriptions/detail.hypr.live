@@ -142,47 +142,21 @@
     </div>
 
     <div class="mz-subscriptionlisting-actions mz-l-formfieldgroup">
-        {% if editing.actions %}
-            <button class="mz-button skip" data-mz-action="skip">Skip</button>
-            <button class="mz-button ordernow" data-mz-action="orderNow">Order Now</button>
-            <button class="mz-button pause" data-mz-action="pause">Pause Subscription</button>
-            <button class="mz-button cancel" data-mz-action="cancel">Cancel Subscription</button>
-            <button class="mz-button cancel" data-mz-action="cancelEditActions">Done</button>
-        {% else %}
-            {% if editing.items %}
-                <select name="add-item" id="add-item-input-{{ model.id }}">
-                    <option value="1001">Treven Getta Patent Pump</option>
-                    <option value="dr-1001">Embellished Striped Dress</option>
-                    <option value="dr-1002">Drop Waist Ruffle Dress</option>
-                </select>
-                <input type="number" id="item-quantity-{{ model.id }}" value=1>
-                <button class="mz-button" data-mz-action="addItem">Add Item</button>
-                {% comment %} <button class="mz-button" data-mz-action="removeItem">Remove Item</button> {% endcomment %}
-                <button class="mz-button cancel" data-mz-action="cancelEditItems">Done</button>
+        {% if not isEditing %}
+            {% if model.status == 'Active' %}
+                <button class="mz-button edit" data-mz-action="editActions">Actions</button>
+                <button class="mz-button edit" data-mz-action="editFrequency">Edit Frequency</button>
+                <button class="mz-button edit" data-mz-action="editNextOrderDate">Edit Next Order Date</button>
+                <button class="mz-button edit" data-mz-action="editItems">Edit Items</button>
+                <button class="mz-button edit" data-mz-action="editPayment">Edit Payment</button>
+                <button class="mz-button edit" data-mz-action="editShipping">Edit Shipping</button>
             {% else %}
-                {% if editing.nextOrderDate %}
-                    <button class="mz-button save" data-mz-action="updateNextOrderDate">Save</button>
-                    <button class="mz-button cancel" data-mz-action="cancelEditNextOrderDate">Cancel</button>
-                {% else %}
-                    {% if editing.frequency %}
-                        <button class="mz-button save" data-mz-action="updateFrequency">Save</button>
-                        <button class="mz-button cancel" data-mz-action="cancelEditFrequency">Cancel</button>
-                    {% else %}
-                        {% if model.status == 'Active' %}
-                            <button class="mz-button edit" data-mz-action="editActions">Actions</button>
-                            <button class="mz-button edit" data-mz-action="editNextOrderDate">Edit Next Order Date</button>
-                            <button class="mz-button edit" data-mz-action="editFrequency">Edit Frequency</button>
-                            <button class="mz-button edit" data-mz-action="editItems">Edit Items</button>
-
-                            
-                        {% else %}
-                            {% if model.status == 'Paused' %}
-                                <button class="mz-button activate" data-mz-action="activate">Activate</button>
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
+                {% if model.status == 'Paused' %}
+                    <button class="mz-button activate" data-mz-action="activate">Activate</button>
                 {% endif %}
             {% endif %}
+        {% else %}
+            {% include "modules/my-account/subscriptions/main-editing-actions" %}
         {% endif %}
     </div>
 </div>

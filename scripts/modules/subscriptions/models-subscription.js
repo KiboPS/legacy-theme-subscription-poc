@@ -27,7 +27,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
                     return prop.attributeFQN === 'system~subscription-frequency';
                 });
                 itemFrequencies.values.forEach(function(value) {
-                    validFrequencyUnits.push(value.value.charAt(0) === 'W' ? 'week' : 'day');
+                    validFrequencyUnits.push(value.value.charAt(0) === 'W' ? 'Week' : 'Day');
                     validFrequencyValues.push(value.value.substring(1));
                 });
             });
@@ -38,7 +38,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
         updateNextOrderDate: function(props) {
             var self = this;
             this.set(props);
-            this.apiUpdateNextOrderDate({nextOrderDate: props.nextOrderDate}).then(function(res) {
+            return this.apiUpdateNextOrderDate({nextOrderDate: props.nextOrderDate}).then(function(res) {
                 self.apiGet();
             });
         },

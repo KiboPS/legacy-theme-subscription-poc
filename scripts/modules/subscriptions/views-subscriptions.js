@@ -31,86 +31,67 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
         templateName: 'modules/my-account/subscriptions/detail',
         initialize: function() {
             var self = this;
+            var forms = ['actions', 'items', 'nextOrderDate', 'frequency', 'payment', 'shipping'];
+            forms.forEach(function(form) {
+                var functionName = 'edit' + form.charAt(0).toUpperCase() + form.substring(1);
+                self[functionName] = function() {
+                    self.beginEdit(form);
+                };
+            });
             this.listenTo(this.model, 'change', this.render, this);
         },
         render: function() {
-            preserveElement(this, ['.mz-itemlisting-thumb'], function() {
+            preserveElement(this, ['.mz-itemlisting-thumb', '.mz-itemlisting-thumb-img'], function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
+        },
+        getRenderContext: function() {
+            var context = EditableView.prototype.getRenderContext.apply(this, context);
+            context.isEditing = this.isEditing;
+            return context;
         },
         constructor: function() {
             EditableView.apply(this, arguments);
             this.editing = {};
+            this.isEditing = false;
             this.invalidFields = {};
         },
-        editActions: function() {
-            this.editing.actions = true;
+        beginEdit: function(section) {
+            this.editing = {};
+            this.editing[section] = true;
+            this.isEditing = true;
             this.render();
         },
-        cancelEditActions: function() {
-            this.editing.actions = false;
-            this.render();
-        },
-        editNextOrderDate: function() {
-            this.editing.nextOrderDate = true;
-            this.render();
-        },
-        cancelEditNextOrderDate: function() {
-            this.editing.nextOrderDate = false;
-            this.render();
-        },
-        editItems: function() {
-            this.editing.items = true;
-            this.render();
-        },
-        cancelEditItems: function() {
-            this.editing.items = false;
-            this.render();
-        },
-        editFrequency: function() {
-            this.editing.frequency = true;
-            this.render();
-        },
-        cancelEditFrequency: function() {
-            this.editing.frequency = false;
+        cancelEdit: function() {
+            this.editing = {};
+            this.isEditing = false;
             this.render();
         },
         updateNextOrderDate: function(e) {
             e.preventDefault();
             var self = this;
-            var inputs = $('input#subscription-nextorderdate-' + self.model.get('id'));
+            var input = self.$el.find('input#subscription-nextorderdate');
             var propsToUpdate = {};
-            inputs.each(function(i, input) {
-                var el = $(input)[0];
-                var oldValue = el.dataset.oldValue;
-                var newValue = el.value;
+            propsToUpdate.nextOrderDate = input.val() + 'T00:00:00.001Z';;
 
-                switch(el.type) {
-                    case 'date':
-                        var date = newValue + 'T00:00:00.001Z';
-                        propsToUpdate[el.dataset.mzValue] = date;
-                        break;
-                    default:
-                        propsToUpdate[el.dataset.mzValue] = newValue;
-
-                }
+            this.model.updateNextOrderDate(propsToUpdate).then(function(res) {
+                self.cancelEdit();
             });
-
-            this.editing.nextOrderDate = false;
-            this.model.updateNextOrderDate(propsToUpdate);
         },
         updateFrequency: function(e) {
             e.preventDefault();
             var self = this;
-            var id = self.model.get('id');
-            var unit = $('select#subscription-frequency-unit-' + id);
-            var value = $('select#subscription-frequency-value-' + id);
+            var unit = self.$el.find('select#subscription-frequency-unit');
+            var value = self.$el.find('select#subscription-frequency-value');
             var frequency = {
                 unit: unit.val(),
                 value: value.val()
             };
-            this.editing.frequency = false;
-            this.model.updateFrequency(frequency);
+            // this.editing.frequency = false;
+            // this.isEditing = false;
+            this.model.updateFrequency(frequency).then(function(res) {
+                self.cancelEdit();
+            });
         },
         render: function() {
             Backbone.MozuView.prototype.render.apply(this, arguments);
@@ -147,8 +128,8 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
         addItem: function(e) {
             // e.preventDefault();
             var self = this;
-            var product = $('#add-item-input-' + self.model.get('id')).val();
-            var quantity = $('#item-quantity-' + self.model.get('id')).val();
+            var product = self.$el.find('#add-item-input').val();
+            var quantity = self.$el.find('#item-quantity').val();
             self.model.addItem(product, quantity);
 
         }

@@ -2,8 +2,10 @@
   {% if editing.nextOrderDate %}
     <div>
       <dl class="mz-propertylist mz-propertylist-order">
-          <dt><label for="subscription-nextorderdate-{{model.id}}" class="">{{ labels.nextOrderDate }}</label></dt>
-          <dd><input id="subscription-nextorderdate-{{model.id}}" subscription-input class="next-order-date" type="date" data-mz-value="nextOrderDate" data-old-value="{{ model.nextOrderDate }}" /></dd>
+          <dt><label for="subscription-nextorderdate" class="">{{ labels.nextOrderDate }}</label></dt>
+          {% with model.nextOrderDate|split('T')|first as nextOrderDate %}
+          <dd><input id="subscription-nextorderdate" subscription-input class="next-order-date" type="date" value="{{nextOrderDate}}" data-old-value="{{ model.nextOrderDate }}" /></dd>
+          {% endwith %}
       </dl>
     </div>
   {% else %}

@@ -1,0 +1,9 @@
+<select name="add-item" id="add-item-input">
+    <option value="1001">Treven Getta Patent Pump</option>
+    <option value="dr-1001">Embellished Striped Dress</option>
+    <option value="dr-1002">Drop Waist Ruffle Dress</option>
+</select>
+<input type="number" id="item-quantity" value=1>
+<button class="mz-button" data-mz-action="addItem">Add Item</button>
+{% comment %} <button class="mz-button" data-mz-action="removeItem">Remove Item</button> {% endcomment %}
+<button class="mz-button cancel" data-mz-action="cancelEdit">Done</button>

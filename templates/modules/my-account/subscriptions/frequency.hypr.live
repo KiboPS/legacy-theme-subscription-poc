@@ -2,19 +2,19 @@
   {% if editing.frequency %}
     <div>
         <dl class="mz-propertylist mz-propertylist-order">
-            <dt><label for="subscription-frequency-value-{{model.id}}" class="">Frequency Value</label></dt>
+            <dt><label for="subscription-frequency-value" class="">Frequency Value</label></dt>
             <dd>
-                <select id="subscription-frequency-value-{{model.id}}" subscription-input class="update-frequency-input" type="text" data-mz-value="frequency-value" data-old-value="{{ model.frequency.value }}">
+                <select id="subscription-frequency-value" subscription-input class="update-frequency-input" type="text" data-mz-value="frequency-value" data-old-value="{{ model.frequency.value }}">
                     {% for value in model.validFrequencyValues %}
-                        <option value="{{value}}">{{value}}</option>
+                        <option value="{{value}}" {% if model.frequency.value == value %}selected{% endif %}>{{value}}</option>
                     {% endfor %}
                 </select>
             </dd>
-            <dt><label for="subscription-frequency-unit-{{model.id}}" class="">Frequency Unit</label></dt>
+            <dt><label for="subscription-frequency-unit" class="">Frequency Unit</label></dt>
             <dd>
-                <select id="subscription-frequency-unit-{{model.id}}" subscription-input class="update-frequency-input" type="text" data-mz-value="frequency-unit" data-old-value="{{ model.frequency.unit }}">
+                <select id="subscription-frequency-unit" subscription-input class="update-frequency-input" type="text" data-mz-value="frequency-unit" data-old-value="{{ model.frequency.unit }}">
                     {% for unit in model.validFrequencyUnits %}
-                        <option value="{{unit}}">{{unit}}</option>
+                        <option value="{{unit}}" {% if model.frequency.unit == unit %}selected{% endif %}>{{unit}}</option>
                     {% endfor %}
                 </select>
             </dd>

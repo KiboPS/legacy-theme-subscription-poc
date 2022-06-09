@@ -1,0 +1,26 @@
+{% if editing.actions %}
+    <button class="mz-button skip" data-mz-action="skip">Skip</button>
+    <button class="mz-button ordernow" data-mz-action="orderNow">Order Now</button>
+    <button class="mz-button pause" data-mz-action="pause">Pause Subscription</button>
+    <button class="mz-button cancel" data-mz-action="cancel">Cancel Subscription</button>
+    <button class="mz-button cancel" data-mz-action="cancelEdit">Done</button>
+{% endif %}
+{% if editing.items %}
+    {% include "modules/my-account/subscriptions/edit-items-form" %}
+{% endif %}
+{% if editing.nextOrderDate %}
+    <button class="mz-button save" data-mz-action="updateNextOrderDate">Save</button>
+    <button class="mz-button cancel" data-mz-action="cancelEdit">Cancel</button>
+{% endif %}
+{% if editing.frequency %}
+    <button class="mz-button save" data-mz-action="updateFrequency">Save</button>
+    <button class="mz-button cancel" data-mz-action="cancelEdit">Cancel</button>
+{% endif %}
+{% if editing.payment %}
+
+    <button class="mz-button cancel" data-mz-action="cancelEdit">Cancel</button>
+{% endif %}
+{% if editing.shipping %}
+
+    <button class="mz-button cancel" data-mz-action="cancelEdit">Cancel</button>
+{% endif %}
