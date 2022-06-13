@@ -1,0 +1,17 @@
+{% comment %} <select name="change-payment" id="change-payment-input">
+    {% for contact in contacts %}
+        <option value="{{contact.id}}">{{ "{0} {1}"|string_format(card.cardType, card.cardNumberPart)}}</option>
+    {% endfor %}
+</select> {% endcomment %}
+<div class="subscription-addresses">
+    {% for contact in contacts %}
+        <div class="subscription-address">
+            <input type="radio" id="address-{{contact.id}}" value="{{contact.id}}" name="address" {% if model.fulfillmentInfo.fulfillmentContact.id == contact.id %}checked{% endif %}>
+            <label for="address-{{contact.id}}">
+                {% include "modules/my-account/subscriptions/address-summary" with model=contact %}
+            </label>
+        </div>
+    {% endfor %}
+</div>
+<button class="mz-button" data-mz-action="saveAddress">Save</button>
+<button class="mz-button cancel" data-mz-action="cancelEdit">Done</button>

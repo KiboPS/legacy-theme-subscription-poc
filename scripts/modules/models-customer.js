@@ -410,6 +410,11 @@
                     cust.getCards();
                 }, self);
             }
+
+            self.on('cards:update', function(ctx) {
+                console.log('updating cards!');
+                self.trigger('update:cards', ctx);
+            });
         },
         isNonPurchaser: function() {
             return (require.mozuData('user').behaviors.length) ? false : true;

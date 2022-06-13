@@ -79,6 +79,10 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
             });
         },
         activate: function () {
+            var self = this;
+            var payment = self.get('payment');
+            delete payment.billingInfo.purchaseOrder;
+            delete payment.billingInfo.check;
             this.apiPerformAction(
                 {
                     actionName: 'Activate',
@@ -114,6 +118,26 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
             };
 
             self.apiAddItem(payload).then(function(res) {
+                self.apiGet();
+            });
+        },
+        updateFulfillmentInfo: function(payload) {
+            var self = this;
+            this.apiUpdateFulfillmentInfo(payload).then(function(res) {
+                self.apiGet();
+            });
+        },
+        updatePayment: function(card, address) {
+            var self = this;
+            var payment = self.get('payment');
+            card.contactId = address.id;
+            payment.billingInfo.billingContact = address;
+            payment.billingInfo.card = card;
+            delete payment.id;
+            delete payment.billingInfo.purchaseOrder;
+            delete payment.billingInfo.check;
+            console.log(payment);
+            self.apiUpdatePayment(payment).then(function(res) {
                 self.apiGet();
             });
         }

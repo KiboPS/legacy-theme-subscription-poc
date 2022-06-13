@@ -17,10 +17,8 @@
     <button class="mz-button cancel" data-mz-action="cancelEdit">Cancel</button>
 {% endif %}
 {% if editing.payment %}
-
-    <button class="mz-button cancel" data-mz-action="cancelEdit">Cancel</button>
+    {% include "modules/my-account/subscriptions/edit-payment-form" %}
 {% endif %}
 {% if editing.shipping %}
-
-    <button class="mz-button cancel" data-mz-action="cancelEdit">Cancel</button>
+    {% include "modules/my-account/subscriptions/edit-address-form" %}
 {% endif %}

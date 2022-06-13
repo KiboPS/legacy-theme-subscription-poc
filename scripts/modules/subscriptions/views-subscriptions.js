@@ -8,7 +8,15 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
             
         },
         initialize: function() {
+            var self = this;
             this.account = window.accountModel || window.accountViews.settings.model;
+
+            this.listenTo(window.accountModel.get('cards'), 'update', function(e) {
+                console.log(e);
+                self.render();
+            }, self);
+            this.listenTo(window.accountModel.get('contacts'), 'update', self.render, self);
+            this.listenTo(self.account, 'sync', self.render, self);
         },
         render: function() {
             var self = this;
@@ -21,6 +29,8 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
                     el: $(this),
                     model: subscription
                 });
+                subscriptionView.cards = self.account.get('cards').toJSON();
+                subscriptionView.contacts = self.account.get('contacts').toJSON();
                 subscriptionView.render();
                 self.subscriptionViews.push(subscriptionView);
             });
@@ -48,6 +58,12 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
         getRenderContext: function() {
             var context = EditableView.prototype.getRenderContext.apply(this, context);
             context.isEditing = this.isEditing;
+            if(this.cards) {
+                context.cards = this.cards;
+            }
+            if(this.contacts) {
+                context.contacts = this.contacts;
+            }
             return context;
         },
         constructor: function() {
@@ -72,7 +88,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
             var self = this;
             var input = self.$el.find('input#subscription-nextorderdate');
             var propsToUpdate = {};
-            propsToUpdate.nextOrderDate = input.val() + 'T00:00:00.001Z';;
+            propsToUpdate.nextOrderDate = input.val() + 'T00:00:00.001Z';
 
             this.model.updateNextOrderDate(propsToUpdate).then(function(res) {
                 self.cancelEdit();
@@ -92,9 +108,6 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
             this.model.updateFrequency(frequency).then(function(res) {
                 self.cancelEdit();
             });
-        },
-        render: function() {
-            Backbone.MozuView.prototype.render.apply(this, arguments);
         },
         skip: function() {
             this.model.skip();
@@ -132,6 +145,45 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
             var quantity = self.$el.find('#item-quantity').val();
             self.model.addItem(product, quantity);
 
+        },
+        saveAddress: function() {
+            var self = this;
+
+            var addressId = self.$el.find('.subscription-addresses').find('input:checked').val();
+
+            console.log(addressId);
+            console.log(self.contacts);
+            var addressToUpdate = self.contacts.find(function(contact) {
+                return contact.id + '' === addressId;
+            });
+
+            console.log(addressToUpdate);
+            var fulfillmentInfo = self.model.get('fulfillmentInfo');
+            fulfillmentInfo.fulfillmentContact = addressToUpdate;
+            self.model.updateFulfillmentInfo(fulfillmentInfo);
+        },
+        updatePayment: function() {
+            var self = this;
+
+            var paymentMethodId = self.$el.find('#change-payment-input').val();
+            var billingAddressId = self.$el.find('.subscription-billing-addresses').find('input:checked').val();
+
+            console.log(paymentMethodId);
+            console.log(billingAddressId);
+            var paymentToUpdate = self.cards.find(function(card) {
+                return card.id === paymentMethodId;
+            });
+
+            var newBillingAddress = self.contacts.find(function(contact) {
+                return contact.id + '' === billingAddressId;
+            });
+
+
+
+            console.log(paymentToUpdate);
+            console.log(newBillingAddress);
+
+            self.model.updatePayment(paymentToUpdate, newBillingAddress);
         }
     });
 

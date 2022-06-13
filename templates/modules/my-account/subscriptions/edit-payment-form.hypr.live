@@ -1,0 +1,21 @@
+<select name="change-payment" id="change-payment-input">
+    {% for card in cards %}
+        <option value="{{card.id}}">{{ "{0} {1}"|string_format(card.cardType, card.cardNumberPart)}}</option>
+    {% endfor %}
+</select>
+
+<div class="subscription-addresses subscription-billing-addresses">
+    {% for contact in contacts %}
+        {% if contact.types|findwhere('name', 'Billing') %}
+            <div class="subscription-address">
+                <input type="radio" id="address-{{contact.id}}" value="{{contact.id}}" name="address" {% if model.fulfillmentInfo.fulfillmentContact.id == contact.id %}checked{% endif %}>
+                <label for="address-{{contact.id}}">
+                    {% include "modules/my-account/subscriptions/address-summary" with model=contact %}
+                </label>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<button class="mz-button save" data-mz-action="updatePayment">Save</button>
+<button class="mz-button cancel" data-mz-action="cancelEdit">Cancel</button>

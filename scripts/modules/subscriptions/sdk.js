@@ -62,6 +62,12 @@ define([], function () {
             "includeSelf": true,
             "verb": "PUT"
         },
+        "update-fulfillment-info": {
+            "template": "{+subscriptionService}{id}/fulfillmentinfo",
+            "shortcutParam": "id",
+            "includeSelf": true,
+            "verb": "PUT"
+        },
         "add-item": {
             "template": "{+subscriptionService}{id}/items",
             "verb": "POST",
