@@ -25,20 +25,50 @@
                         <dd>{{ model.auditInfo.createDate|date("F j, Y") }}</dd>
                     {% endif %}
                 </dl>
+                {% if model.status == 'Active' %}
+                    {% if model.nextOrderDate %}
+                        {% include "modules/my-account/subscriptions/next-order-date" %}
+                    {% endif %}
+                    {% include "modules/my-account/subscriptions/frequency" %}
+                {% endif %}
             </li>
-            {% include "modules/my-account/subscriptions/frequency" %}
             
-            {% if model.nextOrderDate %}
-                {% include "modules/my-account/subscriptions/next-order-date" %}
-            {% endif %}
 
             <li class="mz-orderlisting-details-item">
                 <dl class="mz-propertylist mz-propertylist-order">
                     <dt>{{ labels.subscriptionStatus }}</dt>
                     <dd>{{ model.status }}</dd>
                 </dl>
+                {% if model.status == 'Active' %}
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>{{ labels.paymentMethod }}</dt>
+                        {% with model.payment.billingInfo.card as card %}
+                            <dd>{{card.paymentOrCardType}} {{ card.cardNumberPartOrMask }} {{"{0}/{1}"|string_format(card.expireMonth, card.expireYear)}}</dd>
+                        {% endwith %}
+                    </dl>
+                {% endif %}
             </li>
+            {% if model.itemLevelAdjustmentsTotal < 0 %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>{{ labels.subtotal }}</dt>
+                        <dd>{{ model.subTotal|currency }}</dd>
+                    </dl>
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>Bundle Discounts</dt>
+                        <dd>{{ model.itemLevelAdjustmentsTotal|currency }}</dd>
+                    </dl>
+                </li>
+            {% endif %}
             <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>Item Total</dt>
+                    <dd>{{ model.itemTotal|currency }}</dd>
+                </dl>
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.shippingTotal }}</dt>
+                    <dd>{{ model.shippingTotal|currency }}</dd>
+                </dl>
                 <dl class="mz-propertylist mz-propertylist-order">
                     <dt>{{ labels.total }}</dt>
                     <dd>{{ model.total|currency }}</dd>

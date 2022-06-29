@@ -1,7 +1,9 @@
 <select name="add-item" id="add-item-input">
-    <option value="1001">Treven Getta Patent Pump</option>
-    <option value="dr-1001">Embellished Striped Dress</option>
-    <option value="dr-1002">Drop Waist Ruffle Dress</option>
+    <option></option>
+    <option value="735786015381">Proactiv Skin Purifying Mask (3 fl oz/89 ml)</option>
+    <option value="842944102743">ProactivMD Ultra-Gentle Cleanser (2 fl oz/59 ml)</option>
+    <option value="842944101630">ProactivMD Adapalene Gel 0.1% (0.5 oz/15 ml)</option>
+    <option value="842944102644">Proactiv MD Ultra-Hydrating Moisturizer (1 fl oz/30 ml)</option>
 </select>
 <input type="number" id="item-quantity" value=1>
 <button class="mz-button" data-mz-action="addItem">Add Item</button>

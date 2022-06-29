@@ -768,6 +768,7 @@
   "shippingMethodRequiredError": "Please select a shipping method for all items.",
   "shippingMethodsQuantity": "Qty.",
   "shippingSubtotal": "Shipping Subtotal",
+  "shippingTotal": "Shipping Total",
   "shippingTo": "Items shipping to",
   "shipTo": "Ship To",
   "shortDesc": "Summary",

@@ -45,7 +45,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
         updateFrequency: function (frequency) {
             var self = this;
             this.set('frequency', frequency);
-            this.apiUpdateFrequency(frequency).then(function (res) {
+            return this.apiUpdateFrequency(frequency).then(function (res) {
                 self.apiGet();
             });
         },
@@ -148,7 +148,6 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
             delete payment.id;
             delete payment.billingInfo.purchaseOrder;
             delete payment.billingInfo.check;
-            console.log(payment);
             self.apiUpdatePayment(payment).then(function (res) {
                 self.apiGet();
             });

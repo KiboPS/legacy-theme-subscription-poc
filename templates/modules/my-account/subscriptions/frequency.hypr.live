@@ -1,6 +1,5 @@
-<li class="mz-orderlisting-details-item">
   {% if editing.frequency %}
-    <div>
+
         <dl class="mz-propertylist mz-propertylist-order">
             <dt><label for="subscription-frequency-value" class="">Frequency Value</label></dt>
             <dd>
@@ -19,11 +18,9 @@
                 </select>
             </dd>
         </dl>
-    </div>
   {% else %}
     <dl class="mz-propertylist mz-propertylist-order">
         <dt>{{ labels.subscriptionFrequency }}</dt>
         <dd>{{ "{0} {1} {2}s"|string_format(labels.every, model.frequency.value, model.frequency.unit) }}</dd>
     </dl>
     {% endif %}
-</li>

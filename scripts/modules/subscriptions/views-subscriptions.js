@@ -89,7 +89,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
             var self = this;
             var input = self.$el.find('input#subscription-nextorderdate');
             var propsToUpdate = {};
-            propsToUpdate.nextOrderDate = input.val() + 'T08:00:00.001Z';
+            propsToUpdate.nextOrderDate = input.val() + 'T12:00:00.001Z';
 
             this.model.updateNextOrderDate(propsToUpdate).then(function(res) {
                 self.cancelEdit();
@@ -171,8 +171,6 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
             var paymentMethodId = self.$el.find('#change-payment-input').val();
             var billingAddressId = self.$el.find('.subscription-billing-addresses').find('input:checked').val();
 
-            console.log(paymentMethodId);
-            console.log(billingAddressId);
             var paymentToUpdate = self.cards.find(function(card) {
                 return card.id === paymentMethodId;
             });
@@ -180,11 +178,6 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
             var newBillingAddress = self.contacts.find(function(contact) {
                 return contact.id + '' === billingAddressId;
             });
-
-
-
-            console.log(paymentToUpdate);
-            console.log(newBillingAddress);
 
             self.model.updatePayment(paymentToUpdate, newBillingAddress);
         }

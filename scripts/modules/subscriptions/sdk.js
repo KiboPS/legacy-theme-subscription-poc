@@ -156,7 +156,6 @@ define([], function () {
 
     // adds required properties to the sdk object for use on the page.
     var configure = function () {
-        console.log(this);
         // "this" refers to the sdk object exported by sdk-min.js or sdk-debug.js
         this.ApiReference.methods.subscription = subscriptionConfiguration;
         this.ApiReference.methods.subscriptions = subscriptionsConfiguration;
