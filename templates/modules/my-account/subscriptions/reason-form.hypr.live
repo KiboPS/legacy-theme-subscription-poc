@@ -1,0 +1,14 @@
+<div class="subscription-reason-form-{% block form-type %}{% endblock form-type %}">
+    <select name="change-reason" id="change-reason-input">
+        {% for reason in model.reasons %}
+            <option value="{{reason.reasonCode}}">{{ reason.name }}</option>
+        {% endfor %}
+    </select>
+
+    {% if model.reason.needsMoreInfo %}
+        <input name="moreInfo" type="text">
+    {% endif %}
+
+    <button class="mz-button" data-mz-action="saveReason-{% block form-type %}{% endblock form-type %}">Save</button>
+    <button class="mz-button cancel" data-mz-action="cancelEdit-{% block form-type %}{% endblock form-type %}">Cancel</button>
+</div>

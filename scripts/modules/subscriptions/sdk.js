@@ -85,6 +85,10 @@ define([], function () {
                 "startIndex": 0,
                 "pageSize": 5
             }
+        },
+        "get-reasons": {
+            "template": "{+subscriptionService}reasons",
+            "verb": "GET"
         }
     };
 
@@ -95,14 +99,25 @@ define([], function () {
     var subscriptionFunctions = {
         updateItemQuantity: function (conf) {
             var itemId = conf.itemId,
-                quantity = conf.quantity;
+                quantity = conf.quantity,
+                oldQuantity = conf.oldQuantity;
             var self = this;
 
-            return self.api.action('subscription', 'update-item-quantity', {
-                    id: self.data.id,
-                    itemId: itemId,
-                    quantity: quantity
-                })
+            var config = {
+                id: self.data.id,
+                itemId: itemId,
+                quantity: quantity
+            };
+
+            if(quantity < oldQuantity) {
+                // config.reason = {
+                    config.reasonCode = "FoundBetterPrice",
+                    config.description = "Found Better Price",
+                    config.needsMoreInfo = false
+                // };
+            }
+
+            return self.api.action('subscription', 'update-item-quantity', config)
                 .then(function (data) {
                     return data;
                 });
@@ -141,6 +156,7 @@ define([], function () {
 
     // adds required properties to the sdk object for use on the page.
     var configure = function () {
+        console.log(this);
         // "this" refers to the sdk object exported by sdk-min.js or sdk-debug.js
         this.ApiReference.methods.subscription = subscriptionConfiguration;
         this.ApiReference.methods.subscriptions = subscriptionsConfiguration;

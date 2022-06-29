@@ -27,7 +27,7 @@
     {% if editing.items %}
         <div class="form-field-group">
             <label for="quantity-input-{{model.id}}">Update Quantity</label>
-            <input id="quantity-input-{{model.id}}" type="number">
+            <input id="quantity-input-{{model.id}}" value="{{model.quantity}}" type="number">
             <button data-mz-action="updateQuantity" data-item-id="{{model.id}}">Save</button>
         </div>
     {% endif %}

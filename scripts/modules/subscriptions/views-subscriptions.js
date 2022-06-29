@@ -10,6 +10,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
         initialize: function() {
             var self = this;
             this.account = window.accountModel || window.accountViews.settings.model;
+            // this.fetchReasons();
 
             this.listenTo(window.accountModel.get('cards'), 'update', function(e) {
                 console.log(e);
@@ -50,11 +51,11 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
             });
             this.listenTo(this.model, 'change', this.render, this);
         },
-        render: function() {
-            preserveElement(this, ['.mz-itemlisting-thumb', '.mz-itemlisting-thumb-img'], function() {
-                Backbone.MozuView.prototype.render.call(this);
-            });
-        },
+        // render: function() {
+        //     preserveElement(this, ['.mz-itemlisting-thumb', '.mz-itemlisting-thumb-img'], function() {
+        //         Backbone.MozuView.prototype.render.call(this);
+        //     });
+        // },
         getRenderContext: function() {
             var context = EditableView.prototype.getRenderContext.apply(this, context);
             context.isEditing = this.isEditing;
@@ -88,7 +89,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
             var self = this;
             var input = self.$el.find('input#subscription-nextorderdate');
             var propsToUpdate = {};
-            propsToUpdate.nextOrderDate = input.val() + 'T00:00:00.001Z';
+            propsToUpdate.nextOrderDate = input.val() + 'T08:00:00.001Z';
 
             this.model.updateNextOrderDate(propsToUpdate).then(function(res) {
                 self.cancelEdit();
@@ -121,6 +122,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
                 description: "Found Better Price",
                 needsMoreInfo: false
             });
+            this.cancelEdit();
         },
         cancel: function() {
             this.model.cancel({
@@ -128,6 +130,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/editable-view',
                 description: "Found Better Price",
                 needsMoreInfo: false
             });
+            this.cancelEdit();
         },
         activate: function() {
             this.model.activate();

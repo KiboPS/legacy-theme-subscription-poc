@@ -12,21 +12,21 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
                 model: SubscriptionItem
             })
         },
-        initialize: function() {
+        initialize: function () {
             var self = this;
             self.configureValidFrequencies();
         },
-        configureValidFrequencies: function() {
+        configureValidFrequencies: function () {
             var self = this;
             var items = self.get('items');
             var validFrequencyValues = [];
             var validFrequencyUnits = [];
 
-            items.forEach(function(item) {
-                var itemFrequencies = item.get('product').get('properties').find(function(prop) {
+            items.forEach(function (item) {
+                var itemFrequencies = item.get('product').get('properties').find(function (prop) {
                     return prop.attributeFQN === 'system~subscription-frequency';
                 });
-                itemFrequencies.values.forEach(function(value) {
+                itemFrequencies.values.forEach(function (value) {
                     validFrequencyUnits.push(value.value.charAt(0) === 'W' ? 'Week' : 'Day');
                     validFrequencyValues.push(value.value.substring(1));
                 });
@@ -35,17 +35,17 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
             self.set('validFrequencyUnits', Array.from(new Set(validFrequencyUnits)));
             self.set('validFrequencyValues', Array.from(new Set(validFrequencyValues)));
         },
-        updateNextOrderDate: function(props) {
+        updateNextOrderDate: function (props) {
             var self = this;
             this.set(props);
-            return this.apiUpdateNextOrderDate({nextOrderDate: props.nextOrderDate}).then(function(res) {
+            return this.apiUpdateNextOrderDate({ nextOrderDate: props.nextOrderDate }).then(function (res) {
                 self.apiGet();
             });
         },
-        updateFrequency: function(frequency) {
+        updateFrequency: function (frequency) {
             var self = this;
             this.set('frequency', frequency);
-            this.apiUpdateFrequency(frequency).then(function(res) {
+            this.apiUpdateFrequency(frequency).then(function (res) {
                 self.apiGet();
             });
         },
@@ -59,23 +59,25 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
             });
         },
         pause: function (reason) {
+            var self = this;
             this.apiPerformAction(
                 {
                     actionName: 'Pause',
                     reason: reason
                 }
-            ).then(function(res) {
-                this.set(res);
+            ).then(function (res) {
+                self.apiGet();
             });
         },
         cancel: function (reason) {
+            var self = this;
             this.apiPerformAction(
                 {
                     actionName: 'Cancel',
                     reason: reason
                 }
-            ).then(function(res) {
-                this.set(res);
+            ).then(function (res) {
+                self.apiGet();
             });
         },
         activate: function () {
@@ -92,42 +94,52 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
                         needsMoreInfo: false
                     }
                 }
-            ).then(function(res) {
-                this.set(res);
+            ).then(function (res) {
+                self.apiGet();
             });
         },
-        updateQuantity: function(newQuantity, itemId) {
+        updateQuantity: function (newQuantity, itemId) {
             var self = this;
             var conf = {
                 quantity: newQuantity,
                 itemId: itemId,
-                id: self.get('id')
+                id: self.get('id'),
+                oldQuantity: self.get('items').get(itemId).get('quantity')
             };
-            self.apiUpdateItemQuantity(conf).then(function(res) {
+
+            self.apiUpdateItemQuantity(conf).then(function (res) {
                 self.apiGet();
             });
+            
+
         },
-        addItem: function(product, quantity) {
+        addItem: function (product, quantity) {
             var self = this;
             var payload = {
                 product: {
-                    productCode: product
+                    productCode: product,
+                    options: [{
+                        attributeFQN: "Tenant~one-shot-price-extra",
+                        dataType: "Bool",
+                        name: "One Shot Price Extra",
+                        shopperEnteredValue: ""
+                    }]
                 },
                 quantity: quantity || 1,
                 fulfillmentMethod: 'Ship'
             };
 
-            self.apiAddItem(payload).then(function(res) {
+            self.apiAddItem(payload).then(function (res) {
                 self.apiGet();
             });
         },
-        updateFulfillmentInfo: function(payload) {
+        updateFulfillmentInfo: function (payload) {
             var self = this;
-            this.apiUpdateFulfillmentInfo(payload).then(function(res) {
+            this.apiUpdateFulfillmentInfo(payload).then(function (res) {
                 self.apiGet();
             });
         },
-        updatePayment: function(card, address) {
+        updatePayment: function (card, address) {
             var self = this;
             var payment = self.get('payment');
             card.contactId = address.id;
@@ -137,7 +149,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/api', 'hyprlive', 'modul
             delete payment.billingInfo.purchaseOrder;
             delete payment.billingInfo.check;
             console.log(payment);
-            self.apiUpdatePayment(payment).then(function(res) {
+            self.apiUpdatePayment(payment).then(function (res) {
                 self.apiGet();
             });
         }

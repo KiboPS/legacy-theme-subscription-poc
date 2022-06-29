@@ -4,6 +4,8 @@
     <button class="mz-button pause" data-mz-action="pause">Pause Subscription</button>
     <button class="mz-button cancel" data-mz-action="cancel">Cancel Subscription</button>
     <button class="mz-button cancel" data-mz-action="cancelEdit">Done</button>
+
+    {% comment %} {% include "modules/my-account/subscriptions/reason-form" %} {% endcomment %}
 {% endif %}
 {% if editing.items %}
     {% include "modules/my-account/subscriptions/edit-items-form" %}
