@@ -1,6 +1,6 @@
 <select name="change-payment" id="change-payment-input">
     {% for card in cards %}
-        <option value="{{card.id}}">{{ "{0} {1}"|string_format(card.cardType, card.cardNumberPart)}}</option>
+        <option value="{{card.id}}" {% if model.payment.billingInfo.card.paymentServiceCardId == card.id %}selected{% endif %}>{{ "{0} {1}"|string_format(card.cardType, card.cardNumberPart)}}</option>
     {% endfor %}
 </select>
 
