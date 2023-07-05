@@ -1,0 +1,192 @@
+{% comment %} 
+<div class="subscription-listing-content" data-subscription-id="{{model.id}}">
+    <h4 class="id">Subscription: {{model.id}}</h4>
+    <p class="next-date">Next Order Date: {{model.nextOrderDate}}</p>
+
+    {% for item in model.items %}
+        {% include "modules/my-account/order-history-listing-item" with model=item %}
+    {% endfor %}
+    <button class="mz-button skip" data-mz-action="skip">Skip</button>
+    <button class="mz-button ordernow" data-mz-action="orderNow">Order Now</button>
+</div> {% endcomment %}
+
+<div class="mz-orderlisting mz-subscription-listing">
+    <div class="mz-orderlisting-detail">
+    {% block order-details %}
+    <div class="mz-orderlisting-detail">
+        <ul class="mz-orderlisting-details-list">
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    {% if model.submittedDate %}
+                        <dt>{{ labels.subscriptionCreated }}</dt>
+                        <dd>{{ model.submittedDate|date("F j, Y") }}</dd>
+                    {% else %}
+                        <dt>{{ labels.subscriptionCreated }}</dt>
+                        <dd>{{ model.auditInfo.createDate|date("F j, Y") }}</dd>
+                    {% endif %}
+                </dl>
+                {% if model.status == 'Active' %}
+                    {% if model.nextOrderDate %}
+                        {% include "modules/my-account/subscriptions/next-order-date" %}
+                    {% endif %}
+                    {% include "modules/my-account/subscriptions/frequency" %}
+                {% endif %}
+            </li>
+            
+
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.subscriptionStatus }}</dt>
+                    <dd>{{ model.status }}</dd>
+                </dl>
+                {% if model.status == 'Active' %}
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>{{ labels.paymentMethod }}</dt>
+                        {% with model.payment.billingInfo.card as card %}
+                            <dd>{{card.paymentOrCardType}} {{ card.cardNumberPartOrMask }} {{"{0}/{1}"|string_format(card.expireMonth, card.expireYear)}}</dd>
+                        {% endwith %}
+                    </dl>
+                {% endif %}
+            </li>
+            {% if model.itemLevelAdjustmentsTotal < 0 %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>{{ labels.subtotal }}</dt>
+                        <dd>{{ model.subTotal|currency }}</dd>
+                    </dl>
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>Bundle Discounts</dt>
+                        <dd>{{ model.itemLevelAdjustmentsTotal|currency }}</dd>
+                    </dl>
+                </li>
+            {% endif %}
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>Item Total</dt>
+                    <dd>{{ model.itemTotal|currency }}</dd>
+                </dl>
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.shippingTotal }}</dt>
+                    <dd>{{ model.shippingTotal|currency }}</dd>
+                </dl>
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.total }}</dt>
+                    <dd>{{ model.total|currency }}</dd>
+                </dl>
+            </li>
+            {% if model.amountRefunded > 0 %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>{{ labels.refund }}</dt>
+                        <dd>{{ model.amountRefunded|currency }}</dd>
+                    </dl>
+                </li>
+            {% endif %}
+
+            {% if model.fulfillmentInfo.fulfillmentContact %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        {% block order-shipped-to %}
+                            <dt>{{ labels.shippedTo }}</dt>
+                            <dd>
+                                {% include "modules/my-account/subscriptions/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}
+                            
+                            </dd>
+                        {% endblock order-shipped-to %}
+                    </dl>
+                </li>
+            {% endif %}
+            {% with model.items|findwhere('fulfillmentMethod', 'Delivery') as deliveryItem %}
+                {% if deliveryItem %}
+                    {% if deliveryItem.expectedDeliveryDate %}
+                    <li class="mz-orderlisting-details-item">
+                        <dl class="mz-propertylist mz-propertylist-order">
+                            <dt>{{ labels.expectedDeliveryDate }}</dt>
+                            <dd>{{ deliveryItem.expectedDeliveryDate|date("F j, Y") }}</dd>
+                        </dl>
+                    </li>
+                    {% endif %}
+                {% endif %}
+            {% endwith %}
+        </ul>
+    </div>
+    <div class="mz-orderlisting-detail">
+    {% block deliveryInfo %}
+        {% with model.items|findwhere('fulfillmentMethod', 'Delivery') as deliveryItem %}
+                {% if deliveryItem %}
+                    {% if model.shopperNotes.deliveryInstructions %}
+                    <ul class="mz-orderlisting-details-list">
+                        <li class="mz-orderlisting-details-item">
+                            <dl class="mz-propertylist mz-propertylist-order">
+                                <dt>{{ labels.deliveryInstructions}}</dt>
+                                <dd>{{ model.shopperNotes.deliveryInstructions }}</dd>
+                            </dl>
+                        </li>
+                    </ul>
+                    {% endif %}
+                {% endif %}
+        {% endwith %}
+    {% endblock deliveryInfo %}
+    </div>
+
+    {% block attributes %}
+        {% for attribute in model.attributes %}
+        {% with model.orderAttributeDefinitions|findwhere('attributeFQN', attribute.fullyQualifiedName) as attDef %}
+            {% if attDef %}
+                {% with attribute.values|first as attributeVal %}
+                    <div class="mz-orderlisting-attribute">
+                        <span>{{ attDef.content.value }}</span>
+                        <div>
+                            {% if attDef.dataType === "DateTime" %}
+                                {{ attributeVal|date("F j, Y") }}
+                            {% else %}
+                                {% if attDef.dataType === "Bool" %}
+
+                                    {% if attributeVal == "true" or attributeVal == "True" %}
+                                    Yes
+                                    {% else %}
+                                    No
+                                    {% endif %}
+                                {% else %}
+                                    {{ attributeVal }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endwith %}
+            {% endif %}
+        {% endwith %}
+        {% endfor %}
+
+        {% endblock attributes %}
+
+    {% endblock order-details %}
+    </div>
+
+    <div class="mz-orderlisting-items mz-l-formfieldgroup">
+        {% block order-items %}
+            {% for item in model.items %}
+                {% include "modules/my-account/subscriptions/subscription-item-listing" with model=item %}
+            {% endfor %}
+        {% endblock order-items %}
+    </div>
+
+    <div class="mz-subscriptionlisting-actions mz-l-formfieldgroup">
+        {% if not isEditing %}
+            {% if model.status == 'Active' %}
+                <button class="mz-button edit" data-mz-action="editActions">Actions</button>
+                <button class="mz-button edit" data-mz-action="editFrequency">Edit Frequency</button>
+                <button class="mz-button edit" data-mz-action="editNextOrderDate">Edit Next Order Date</button>
+                <button class="mz-button edit" data-mz-action="editItems">Edit Items</button>
+                <button class="mz-button edit" data-mz-action="editPayment">Edit Payment</button>
+                <button class="mz-button edit" data-mz-action="editShipping">Edit Shipping</button>
+            {% else %}
+                {% if model.status == 'Paused' %}
+                    <button class="mz-button activate" data-mz-action="activate">Activate</button>
+                {% endif %}
+            {% endif %}
+        {% else %}
+            {% include "modules/my-account/subscriptions/main-editing-actions" %}
+        {% endif %}
+    </div>
+</div>

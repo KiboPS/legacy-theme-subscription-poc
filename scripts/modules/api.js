@@ -4,10 +4,27 @@
  * (tenant, catalog and store IDs, and authorization tickets).
  */
 
-define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) { 
+define(['sdk', 'jquery', 'hyprlive', 'modules/subscriptions/sdk'], function (Mozu, $, Hypr, Subscriptions) { 
     var apiConfig = require.mozuData('apicontext');
+    apiConfig.urls.subscriptionService = '/api/commerce/subscriptions/';
     Mozu.setServiceUrls(apiConfig.urls);
     var api = Mozu.Store(apiConfig.headers).api();
+
+    // creates and sets subscription api configurations on the sdk object.
+    Subscriptions.configure.apply(Mozu);
+
+    var oldGetAvailableActionsFor = api.getAvailableActionsFor;
+    // overrides the getAvailableActionsFor function so that backboneMozuModel can correctly build functions for subscription types.
+    // if not one of the new types, calls the original getAvailableActionsFor function.
+    api.getAvailableActionsFor = function(type) {
+        if(type === 'subscription') {
+            return Subscriptions.getSubscriptionActions();
+        } else if (type === 'subscriptions') {
+            return Subscriptions.getSubscriptionsActions();
+        } else {
+            return oldGetAvailableActionsFor(type);
+        }
+    };
 
     var extendedPropertyParameters = Hypr.getThemeSetting('extendedPropertyParameters');
     if (extendedPropertyParameters && Hypr.getThemeSetting('extendedPropertiesEnabled')) {

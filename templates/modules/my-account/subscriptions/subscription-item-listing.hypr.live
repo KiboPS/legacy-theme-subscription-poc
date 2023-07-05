@@ -1,0 +1,39 @@
+{% extends "modules/common/item-listing" %}
+
+{% block item-details %}
+    <div class="mz-itemlisting-description">
+      {% for option in model.product.options %}
+        {{ option.name }}: 
+        {% if option.shopperEnteredValue %} 
+          {{ option.shopperEnteredValue }}, 
+        {% endif %}
+        {% if option.value %} 
+          {{ option.value }}, 
+        {% endif %}
+      {% endfor %}
+      {{ model.product.variationProductCode|default(model.product.productCode) }}
+      {% if model.product.measurements.packageWeight.value %}, 
+        {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}
+      {% endif %}
+    </div>
+    <div class="mz-itemlisting-price">
+      {% include "modules/my-account/subscriptions/item-listing-price" %}
+    </div>
+    <div class="mz-itemlisting-quantity">
+     {{labels.orderPackageQuantity}} : {%if packageItem %} {{ packageItem.quantity}} {% else %} {{ model.quantity}} {% endif %} 
+    </div>  
+{% endblock item-details %}
+{% block item-listing-actions %}
+    {% if editing.items %}
+        <div class="form-field-group">
+            <label for="quantity-input-{{model.id}}">Update Quantity</label>
+            <input id="quantity-input-{{model.id}}" value="{{model.quantity}}" type="number">
+            <button data-mz-action="updateQuantity" data-item-id="{{model.id}}">Save</button>
+        </div>
+    {% endif %}
+{% endblock item-listing-actions %}
+{% block item-listing-extras %}
+{% if returning == model.id %}
+<p class="mz-itemlisting-prompt is-warning">{{ labels.returnInfo|safe }}</p>
+{% endif %}
+{% endblock item-listing-extras %}

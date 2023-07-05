@@ -1,0 +1,14 @@
+{{labels.orderPackagePrice}} :
+{% if model.lineItemAdjustment < 0 %}
+    {% with model.quantity as quantity %}
+        {% with model.total|divide(quantity) as unitPrice %}
+            {% if unitPrice < model.product.price.price %}
+                <span class="is-crossedout" style="color: red;">{{ model.product.price.price|currency }}</span>
+            {% endif %}
+            {{ unitPrice|currency }}
+        {% endwith %}
+    {% endwith %}
+
+{% else %}
+    {% include "modules/common/price" with model=model.product.price %}
+{% endif %}

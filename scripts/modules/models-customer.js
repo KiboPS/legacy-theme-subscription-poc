@@ -1,8 +1,8 @@
 ﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders',
     'modules/models-paymentmethods', 'modules/models-product',
     'modules/models-returns', 'hyprlive', 'modules/models-b2b-account',
-    'modules/models-quotes','modules/models-b2bcontacts'],
-    function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels, QuoteModels, B2bContactModels) {
+    'modules/models-quotes','modules/models-b2bcontacts', 'modules/subscriptions/models-subscription'],
+    function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels, QuoteModels, B2bContactModels, SubscriptionModels) {
 
     var pageContext = require.mozuData('pagecontext'),
         validShippingCountryCodes,
@@ -354,6 +354,7 @@
             wishlist: Wishlist,
             orderHistory: OrderModels.OrderCollection,
             returnHistory: ReturnModels.RMACollection,
+            subscriptions: SubscriptionModels.SubscriptionCollection,
             quoteHistory: QuoteModels.QuoteCollection,
             b2bContactHistory: B2bContactModels.B2bContactCollection
         }, Customer.prototype.relations),
@@ -380,6 +381,7 @@
             var self = this,
                 orderHistory = this.get('orderHistory'),
                 returnHistory = this.get('returnHistory'),
+                subscriptions = this.get('subscriptions'),
                 quoteHistory = this.get('quoteHistory'),
                 b2bContactHistory = this.get('b2bContactHistory');
             this.get('editingContact').set('accountId', this.get('id'));
@@ -408,6 +410,11 @@
                     cust.getCards();
                 }, self);
             }
+
+            self.on('cards:update', function(ctx) {
+                console.log('updating cards!');
+                self.trigger('update:cards', ctx);
+            });
         },
         isNonPurchaser: function() {
             return (require.mozuData('user').behaviors.length) ? false : true;

@@ -155,10 +155,13 @@ module.exports = function (grunt) {
           'admin/**/*',
           'resources/**/*',
           'packageconfig.xml',
+          'scripts/**/*',
           'stylesheets/**/*',
           'templates/**/*',
           '*thumb.png',
           '*thumb.jpg',
+          'theme.json',
+          'theme-ui.json',
           '!*.orig',
           '!.inherited'
         ],
@@ -229,6 +232,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'build',
+    'mozusync:upload',
     'watch:sync'
     ]);
 };

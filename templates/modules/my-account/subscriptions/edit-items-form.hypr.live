@@ -1,0 +1,11 @@
+<select name="add-item" id="add-item-input">
+    <option></option>
+    <option value="735786015381">Proactiv Skin Purifying Mask (3 fl oz/89 ml)</option>
+    <option value="842944102743">ProactivMD Ultra-Gentle Cleanser (2 fl oz/59 ml)</option>
+    <option value="842944101630">ProactivMD Adapalene Gel 0.1% (0.5 oz/15 ml)</option>
+    <option value="842944102644">Proactiv MD Ultra-Hydrating Moisturizer (1 fl oz/30 ml)</option>
+</select>
+<input type="number" id="item-quantity" value=1>
+<button class="mz-button" data-mz-action="addItem">Add Item</button>
+{% comment %} <button class="mz-button" data-mz-action="removeItem">Remove Item</button> {% endcomment %}
+<button class="mz-button cancel" data-mz-action="cancelEdit">Done</button>

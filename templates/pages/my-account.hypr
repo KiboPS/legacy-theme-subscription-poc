@@ -54,6 +54,11 @@
             {% include "modules/my-account/my-account-returnhistory" with model=model.returnHistory %}
         </div>
 
+        <a id="subscriptions"></a>
+        <div class="mz-l-stack-section mz-subscriptions" id="account-subscriptions">
+            {% include "modules/my-account/subscriptions/myaccount-subscriptions" with model=model.subscriptions %}
+        </div>
+
         <a id="paymentmethods"></a>
         <div class="mz-l-stack-section mz-accountpaymentmethods" id="account-paymentmethods">
             {% include "modules/my-account/my-account-paymentmethods" %}
